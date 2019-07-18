@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import Image
+from PIL import ImageTk
 from Data import Data
 from Devices import Devices
 from BorrowedList import BorrowedList
@@ -35,11 +36,11 @@ class MainMenu:
 
 
     def __controlUserBut(self):
-        self.control_user_but = Button(self.master, bg='#00b386', text="Control User", fg='#ffffff', font =('time new roman', 20, 'bold'), command =self.__controlUser)
+        self.control_user_but = Button(self.master, bg='#00b386', text="Control User", fg='#ffffff', font =('time new roman', 18, 'bold'), command =self.__controlUser)
         self.control_user_but.place(relx=0.2, rely=0.28, relheight= 0.15, relwidth = 0.6)
 
     def __controlLabBut(self):
-        self.control_lab_but = Button(self.master, bg='#00b386', text="Control Lab", fg='#ffffff',font=('time new roman', 20, 'bold'))
+        self.control_lab_but = Button(self.master, bg='#00b386', text="Control Lab", fg='#ffffff',font=('time new roman', 18, 'bold'))
         self.control_lab_but.place(relx=0.2, rely=0.45, relheight=0.15, relwidth=0.6)
 
     def __logOutBut(self):
@@ -50,7 +51,7 @@ class MainMenu:
 
 
     def __controlDevicesBut(self):
-        self.control_device_but = Button(self.master, bg='#00b386', text="Control Devices", fg='#ffffff',font=('time new roman', 20, 'bold'), command= self.__controlDevices)
+        self.control_device_but = Button(self.master, bg='#00b386', text="Control Devices", fg='#ffffff',font=('time new roman', 18, 'bold'), command= self.__controlDevices)
         self.control_device_but.place(relx=0.2, rely=0.62, relheight=0.15, relwidth=0.6)
 
     def __controlDevices(self):
@@ -78,7 +79,7 @@ class SignIn:
         self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
 
         self.load = Image.open("SmartLab.png")
-        self.render = ImageTk.PhotoImage(self.load.resize((217,91)))
+        self.render = ImageTk.PhotoImage(self.load)
         self.__logo= Label(self.__main_frame, image=self.render, bg='#ffffff' )
         self.__logo.place(relx=0.27, rely=0)
         self.__ID()
