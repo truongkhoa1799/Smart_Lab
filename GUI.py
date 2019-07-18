@@ -5,8 +5,13 @@ from PIL import ImageTk
 from Data import Data
 from Devices import Devices
 from BorrowedList import BorrowedList
+import time
+from multiprocessing import Process
+from CommunicateArduino import SendToArduino
+
 
 LENGTH_OF_PIN =4
+DATA_FROM_ARDUINO=""
 
 #----------------class hoa chu dau
 #----------------ham private __roi thuong chu dau, sau do la hoa, public ko co __
@@ -26,7 +31,7 @@ class MainMenu:
         self.__main_frame = Frame(self.master, bg='#ffffff')
         self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
         self.load = Image.open("SmartLab.png")
-        self.render = ImageTk.PhotoImage(self.load.resize((217, 91)))
+        self.render = ImageTk.PhotoImage(self.load)
         self.__logo = Label(self.master, image=self.render, bg='#ffffff')
         self.__logo.place(relx=0.27, rely=0)
         self.__controlUserBut()
@@ -281,6 +286,7 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
+            communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
             data.addUser(self.__string_SID, self.__string_name, self.__string_email, self.__string_pin)
             messagebox.showinfo("Add Users", "Add successfully.")
             self.mainMenu()
@@ -329,7 +335,7 @@ class AddUser:
         elif len(self.__string_SID)!=7: check=3
         # in this method, check whether the user is in the database, rematch with another
         # users about SID, email or not if yes, return check =2
-        elif data.checkUser(self.__string_name, 1)==1 or data.checkUser(self.__string_SID,0)==1:
+        elif data.checkUser(self.__string_SID,0)==1:
             check=2
         #check whether the pin is correct or not
         elif (self.__string_pin!=self.__string_check_pin) or len(self.__string_pin)!=LENGTH_OF_PIN:
@@ -1022,9 +1028,33 @@ class CheckBorrowedEquipmentsWin:
 
 
 
-
 data=Data()
 root= Tk()
+communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
-root.mainloop()
+
+
+def loopGUI():
+    root.mainloop()
+
+
+def loopRECEIVE():
+    while TRUE:
+        communicate.receiveInfor()
+    
+
+if __name__=="__main__":
+    p2=Process(target=loopGUI)
+    p2.start()
+    p1=Process(target=loopRECEIVE)
+    p1.start()
+    
+
+
+
+
+
+
+
+
