@@ -6,7 +6,7 @@ class Data:
         #load the infor from file to list
         f1=file.readlines()
         for x in f1:
-            list=["","","",""]
+            list=["","","","",""]
             self.__changeToList(list, x)
             self.__list.append(list)
             self.__no_users= self.__no_users+1
@@ -32,9 +32,9 @@ class Data:
 
 
 
-    def addUser(self, SID,name, email, pin):
+    def addUser(self, SID,name, email, pin,uid):
         self.__no_users+=1
-        self.__list.append([SID, name, email, pin])
+        self.__list.append([SID, name, email, pin,uid])
         self.__list.sort()
         self.__writeIntoFile()
 
@@ -60,7 +60,7 @@ class Data:
         file = open("data.txt", "w")
         file.write("")
         for i in range(self.__no_users):
-            string_infor=self.__list[i][0]+"|"+self.__list[i][1]+"|"+self.__list[i][2]+"|"+self.__list[i][3]+"\n"
+            string_infor=self.__list[i][0]+"|"+self.__list[i][1]+"|"+self.__list[i][2]+"|"+self.__list[i][3]+"|"+self.__list[i][4]+"\n"
             file.write(string_infor)
         file.close()
 

@@ -287,7 +287,8 @@ class AddUser:
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
             communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
-            data.addUser(self.__string_SID, self.__string_name, self.__string_email, self.__string_pin)
+            uid=communicate.getUID()
+            data.addUser(self.__string_SID, self.__string_name, self.__string_email, self.__string_pin,uid)
             messagebox.showinfo("Add Users", "Add successfully.")
             self.mainMenu()
         elif self.__checkAddUsers()==0:
@@ -1030,7 +1031,7 @@ class CheckBorrowedEquipmentsWin:
 
 data=Data()
 root= Tk()
-communicate= SendToArduino("0")
+communicate= SendToArduino("1")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -1047,8 +1048,8 @@ def loopRECEIVE():
 if __name__=="__main__":
     p2=Process(target=loopGUI)
     p2.start()
-    p1=Process(target=loopRECEIVE)
-    p1.start()
+    #p1=Process(target=loopRECEIVE)
+    #p1.start()
     
 
 
