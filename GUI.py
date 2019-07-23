@@ -1031,7 +1031,7 @@ class CheckBorrowedEquipmentsWin:
 
 data=Data()
 root= Tk()
-communicate= SendToArduino("1")
+communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
