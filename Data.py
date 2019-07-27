@@ -33,7 +33,9 @@ class Data:
         return self.__list
 
     def getInforWithID(self, infor):
-       return self.__list[infor]
+        if infor in self.__list:
+            return self.__list[infor]
+        else: return 0
 
     def get(self):
         return self.__list

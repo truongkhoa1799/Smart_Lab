@@ -38,6 +38,8 @@ class AccountStatus:
         self.__writeFile()
 
     def getStatus(self, ID):
-        return self.__list[ID]
+        if ID in self.__list:
+            return self.__list[ID]
+        else: return 0
 
 

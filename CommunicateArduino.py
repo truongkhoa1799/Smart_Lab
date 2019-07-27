@@ -16,17 +16,6 @@ class SendToArduino:
         # 1|name|pin for get infor
         # 3 for get id
         self.__transmitData=data
-        self.__root = Tk()
-        canvas = Canvas(self.__root, height=100, width=100)
-        canvas.pack()
-        insert= Button(self.__root, text="Insert your card", command=self.__insertCardAdd)
-        insert.place(relx=0, rely=0, relheight=0.5, relwidth=1)
-        
-        close=Button(self.__root, text="close",  command=self.__closeInsertCardAdd)
-        close.place(relx=0, rely=0.5, relheight=0.5, relwidth=1)
-        self.__root.mainloop()
-        
-    def __insertCardAdd(self):
         check=0
         self.__ser.write(self.__transmitData.encode('utf-8'))
         while check==0:
@@ -35,9 +24,7 @@ class SendToArduino:
             self.__receiveInfor=str(self.__receiveInfor)
             if self.__receiveInfor!="b''": check=1
             else: check =0
-            
-    def __closeInsertCardAdd(self):
-         self.__root.destroy()
+      
 
 
     def sendRequestUID(self):
