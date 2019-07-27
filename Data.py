@@ -33,7 +33,9 @@ class Data:
         return self.__list
 
     def getInforWithID(self, infor):
-       return self.__list[infor]
+        if infor in self.__list:
+            return self.__list[infor]
+        else: return 0
 
     def get(self):
         return self.__list
@@ -59,6 +61,7 @@ class Data:
                 self.__list[i][3]=pin
                 break
         self.__writeIntoFile()
+
 
     def deleteUser(self, infor):
         self.__no_users= self.__no_users-1

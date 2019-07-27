@@ -315,19 +315,23 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            #communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            # if check = 1 do else print fail
             #uid=communicate.getUID()
+            uid="82 BB 44 96"
+            #print(uid)
             #send infor to arduino to get RFID UID
             list = {}
             list["Name"] = self.__string_name
             list["Gender"] = self.__string_gender
             list["ID number"] = self.__string_SID
             list["Email"] = self.__string_email
-            list["RFID UID"] = "82 BB 44 96"
+            list["RFID UID"] = uid
             list["PIN"] = self.__string_pin
             list["password"] = self.__string_pw
             # send this list to FireBase
             # and receive new list
+            print(list)
             check, new_list = database.addUser(list)
             if check==TRUE:
                 data.addUser(new_list)
@@ -461,7 +465,9 @@ class CheckUser:
     def __check(self):
         list=[]
         list=data.getInforWithID(self.__entry.get())
-        self.__showInfor(list)
+        if list!=0:
+            self.__showInfor(list)
+        else: messagebox.showinfo("Check User","There is no user!")
 
     def __activeAcount(self):
         result= messagebox.askyesno("Active Account","Are you sure?")
@@ -1074,7 +1080,7 @@ class BorrowedEquipments:
         if askUID==1:
             #commnunicate.sendRequestUID()
             #uid=communicate.getUID()
-            id=data.getIDWithRFID_UID("12 21 21 31")
+            id=data.getIDWithRFID_UID("82 BB 44 96")
             if id!=0:
                 cursor= self.__list_box.curselection()
                 if cursor!=():
@@ -1139,7 +1145,7 @@ class ReturnBorrowedDevicesWindow:
         # ask UID
         #communicate.sendRequestUID()
         #uid=communicate.getUID()
-        uid="12 21 21 32"
+        uid="82 BB 44 96"
         id= data.getIDWithRFID_UID(uid)
         list = self.__bdl.getInforWithNameAndID(self.__name, id)
         if list!=0:
