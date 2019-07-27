@@ -15,9 +15,7 @@ from AccountStatus import AccountStatus
 
 LENGTH_OF_PIN =4
 DATA_FROM_ARDUINO=""
-State=0
-TriggerLoopRequestUID=0
-Infor=""
+
 
 #----------------class hoa chu dau
 #----------------ham private __roi thuong chu dau, sau do la hoa, public ko co __
@@ -315,16 +313,7 @@ class AddUser:
         self.__string_check_pw= self.__entry_check_pw.get()
         result=messagebox.askyesno("Add User","Are you sure about your information?")
         if result ==1:
-            Infor="1|"+self.__string_name+"|"+self.__string_pin
-            State=1
-            TriggerLoopRequestUID=1
-            result1= messagebox.askyesno("Insert Card","Please insert your card befor pressing yes.")
-            if result1==1:
-                self.__submitAddUserConfrim()
-            else:
-                Infor =""
-                State=0
-                TriggerLoopRequestUID=0
+           self.__submitAddUserConfrim()
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
@@ -1398,16 +1387,9 @@ def loopGUI():
     root.mainloop()
 
 
-def SlaveFunction():
-     if State==1:
-         print(Infor,TriggerLoopRequestUID)
-         #check, TriggerLoopRequestUID=communicate.sendInfor(Infor, TriggerLoopRequestUID)
-         #State=0
     
 
 if __name__=="__main__":
-    p1 = Process(target=SlaveFunction)
-    p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 

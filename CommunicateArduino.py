@@ -12,27 +12,26 @@ class SendToArduino:
         self.__transmitData=""
 
 
-    def sendInfor(self, data, Trig):
+    def sendInfor(self, data):
         # 1|name|pin for get infor
         # 3 for get id
         self.__transmitData=data
         check=0
         if data[0]=="1":self.__ser.write(self.__transmitData.encode('utf-8'))
-        while Trig==1:
+        while check==0:
             print("waiting")
             self.__receiveInfor=self.__ser.readline();
             self.__receiveInfor=str(self.__receiveInfor)
-            if self.__receiveInfor!="b''": Trig=0
-            else: Trig =1
+            if self.__receiveInfor!="b''": check=1
+            else: check=0
         print(self.__receiveInfor)
         if self.__receiveInfor[2:-5]=="Fail":
             print("fail")
             self.__receiveInfor=="b''"
-            #return Trig, check
-            return 0,0
+            return 0
         else:
             self.__receiveInfor=="b''"
-            return 0,1
+            return 1
       
 
 
