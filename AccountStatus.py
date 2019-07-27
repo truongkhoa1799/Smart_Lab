@@ -1,7 +1,7 @@
 class AccountStatus:
     def __init__(self):
         self.__list = {}
-        file = open("AccountStatus.txt", "r")
+        file = open("accountStatus.txt", "r")
         f1 = file.readlines()
         for x in f1:
             list=["",""]
