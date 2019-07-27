@@ -17,20 +17,28 @@ class SendToArduino:
         # 3 for get id
         self.__transmitData=data
         check=0
+        count=0
         if data[0]=="1":self.__ser.write(self.__transmitData.encode('utf-8'))
-        while check==0:
+        while check==0 and count<=1000:
             print("waiting")
             self.__receiveInfor=self.__ser.readline();
             self.__receiveInfor=str(self.__receiveInfor)
             if self.__receiveInfor!="b''": check=1
             else: check=0
+            count=count+1
+            time.sleep(0.01)
         print(self.__receiveInfor)
-        if self.__receiveInfor[2:-5]=="Fail":
-            print("fail")
+        if count==1000:
+            self.__receiveInfor == "b''"
+            return 3
+        elif self.__receiveInfor[2:-5]=="Fail":
             self.__receiveInfor=="b''"
             return 0
-        else:
+        elif self.__receiveInfor[2:-5]=="USED TAG":
             self.__receiveInfor=="b''"
+            return 2
+        else:
+            self.__receiveInfor == "b''"
             return 1
       
 

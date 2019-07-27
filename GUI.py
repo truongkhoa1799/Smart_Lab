@@ -344,7 +344,9 @@ class AddUser:
                     messagebox.showinfo("Add Users", "Add successfully.")
                     self.mainMenu()
                 else: messagebox.showinfo("Add User","Fail")
-            else: messagebox.showinfo("Add User","Fail")
+            elif check==0: messagebox.showinfo("Add User","Fail")
+            elif check==2: messagebox.showinfo("Add User","Used Tag")
+            elif check==3: messagebox.showinfo("Add User","Please insert your Tag")
         elif self.__checkAddUsers()==0:
             messagebox.showwarning("Add Users", "Add unsuccessfully. Please fulfill your information!")
             #self.mainMenu()
@@ -1386,10 +1388,17 @@ SignInScreen.SignInScreen()
 def loopGUI():
     root.mainloop()
 
-
-    
+# def Receive():
+#     count=0
+#     print("start")
+#     while count<1000:
+#         time.sleep(0.01)
+#         count=count+1
+#     print("end")
 
 if __name__=="__main__":
+    # p1 = Process(target=Receive)
+    # p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 

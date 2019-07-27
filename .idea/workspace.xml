@@ -14,13 +14,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="392" column="55" lean-forward="true" selection-start-line="392" selection-start-column="55" selection-end-line="392" selection-end-column="55" />
+            <state relative-caret-position="268">
+              <caret line="1400" column="16" lean-forward="true" selection-start-line="1399" selection-start-column="3" selection-end-line="1400" selection-end-column="16" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#18871#23681#0" />
+                <element signature="e#23826#26702#0" />
+                <element signature="e#26831#30771#0" />
+                <element signature="e#30902#32508#0" />
+                <element signature="e#32642#36723#0" />
+                <element signature="e#36855#39698#0" />
+                <element signature="e#39833#43563#0" />
+                <element signature="e#43698#46822#0" />
+                <element signature="e#46959#51863#0" />
+                <element signature="e#52008#55915#0" />
+                <element signature="e#55941#62150#0" />
+                <element signature="e#62294#64675#0" />
               </folding>
             </state>
           </provider>
@@ -29,7 +41,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Downloads/sampleDatabase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
+            <state relative-caret-position="354">
               <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
             </state>
           </provider>
@@ -38,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AccountStatus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
+            <state relative-caret-position="354">
               <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
             </state>
           </provider>
@@ -47,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/firebaseAPI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1071">
+            <state relative-caret-position="354">
               <caret line="65" column="32" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="32" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -59,7 +71,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BorrowedList.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1904">
+            <state relative-caret-position="354">
               <caret line="112" column="26" selection-start-line="112" selection-start-column="26" selection-end-line="112" selection-end-column="26" />
             </state>
           </provider>
@@ -68,7 +80,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1071">
+            <state relative-caret-position="354">
               <caret line="63" selection-start-line="63" selection-end-line="63" />
             </state>
           </provider>
@@ -77,17 +89,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Devices.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
+            <state relative-caret-position="354">
               <caret line="88" selection-start-line="88" selection-end-line="88" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommunicateArduino.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+            <state relative-caret-position="204">
+              <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -115,8 +127,8 @@
         <option value="$PROJECT_DIR$/BorrowedList.py" />
         <option value="$PROJECT_DIR$/Devices.py" />
         <option value="$PROJECT_DIR$/Data.py" />
-        <option value="$PROJECT_DIR$/GUI.py" />
         <option value="$PROJECT_DIR$/CommunicateArduino.py" />
+        <option value="$PROJECT_DIR$/GUI.py" />
       </list>
     </option>
   </component>
@@ -282,13 +294,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09821428" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.28641573" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.28641573" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39938557" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -317,23 +330,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="1400" column="16" lean-forward="true" selection-start-line="1399" selection-start-column="3" selection-end-line="1400" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#18871#23681#0" />
+            <element signature="e#23826#26702#0" />
+            <element signature="e#26831#30771#0" />
+            <element signature="e#30902#32508#0" />
+            <element signature="e#32642#36723#0" />
+            <element signature="e#36855#39698#0" />
+            <element signature="e#39833#43563#0" />
+            <element signature="e#43698#46822#0" />
+            <element signature="e#46959#51863#0" />
+            <element signature="e#52008#55915#0" />
+            <element signature="e#55941#62150#0" />
+            <element signature="e#62294#64675#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/Downloads/sampleDatabase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
+        <state relative-caret-position="354">
           <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AccountStatus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
+        <state relative-caret-position="354">
           <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/firebaseAPI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
+        <state relative-caret-position="354">
           <caret line="65" column="32" selection-start-line="65" selection-start-column="32" selection-end-line="65" selection-end-column="32" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
@@ -343,41 +378,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BorrowedList.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1904">
+        <state relative-caret-position="354">
           <caret line="112" column="26" selection-start-line="112" selection-start-column="26" selection-end-line="112" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
+        <state relative-caret-position="354">
           <caret line="63" selection-start-line="63" selection-end-line="63" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Devices.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
+        <state relative-caret-position="354">
           <caret line="88" selection-start-line="88" selection-end-line="88" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CommunicateArduino.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+        <state relative-caret-position="204">
+          <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="392" column="55" lean-forward="true" selection-start-line="392" selection-start-column="55" selection-end-line="392" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
