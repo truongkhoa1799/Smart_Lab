@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05a56223-0f43-47ce-9a6b-3b432ad604b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accountStatus.txt" beforeDir="false" afterPath="$PROJECT_DIR$/accountStatus.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/devices.txt" beforeDir="false" afterPath="$PROJECT_DIR$/devices.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,15 +18,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1896">
-              <caret line="1178" lean-forward="true" selection-start-line="1178" selection-end-line="1178" />
+            <state relative-caret-position="123">
+              <caret line="324" column="47" lean-forward="true" selection-start-line="324" selection-start-column="47" selection-end-line="324" selection-end-column="47" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
                 <element signature="e#756#2912#0" />
                 <element signature="e#3038#5770#0" />
                 <element signature="e#5900#8904#0" />
-                <element signature="e#9029#18409#0" />
-                <element signature="e#18537#23255#0" />
                 <element signature="e#23400#26276#0" />
                 <element signature="e#26405#30345#0" />
                 <element signature="e#30476#32082#0" />
@@ -139,17 +140,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Project" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -299,6 +290,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09821428" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -320,6 +312,30 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/tkinter/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="1704" selection-start-line="1704" selection-end-line="1704" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="324" column="47" lean-forward="true" selection-start-line="324" selection-start-column="47" selection-end-line="324" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#756#2912#0" />
+            <element signature="e#3038#5770#0" />
+            <element signature="e#5900#8904#0" />
+            <element signature="e#23400#26276#0" />
+            <element signature="e#26405#30345#0" />
+            <element signature="e#30476#32082#0" />
+            <element signature="e#32216#36297#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/Downloads/sampleDatabase.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -371,32 +387,6 @@
           <caret line="44" column="29" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/tkinter/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="1704" selection-start-line="1704" selection-end-line="1704" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1896">
-          <caret line="1178" lean-forward="true" selection-start-line="1178" selection-end-line="1178" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <element signature="e#756#2912#0" />
-            <element signature="e#3038#5770#0" />
-            <element signature="e#5900#8904#0" />
-            <element signature="e#9029#18409#0" />
-            <element signature="e#18537#23255#0" />
-            <element signature="e#23400#26276#0" />
-            <element signature="e#26405#30345#0" />
-            <element signature="e#30476#32082#0" />
-            <element signature="e#32216#36297#0" />
           </folding>
         </state>
       </provider>

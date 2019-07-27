@@ -323,7 +323,7 @@ class AddUser:
             list["Gender"] = self.__string_gender
             list["ID number"] = self.__string_SID
             list["Email"] = self.__string_email
-            list["RFID UID"] = "12 21 21 32"
+            list["RFID UID"] = "82 BB 44 96"
             list["PIN"] = self.__string_pin
             list["password"] = self.__string_pw
             # send this list to FireBase
