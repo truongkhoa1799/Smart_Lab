@@ -10,11 +10,14 @@ from multiprocessing import Process
 from firebaseAPI import MyFirebase
 from AccountStatus import AccountStatus
 
-from CommunicateArduino import SendToArduino
+#from CommunicateArduino import SendToArduino
 
 
 LENGTH_OF_PIN =4
 DATA_FROM_ARDUINO=""
+State=0
+TriggerLoopRequestUID=0
+Infor=""
 
 #----------------class hoa chu dau
 #----------------ham private __roi thuong chu dau, sau do la hoa, public ko co __
@@ -311,15 +314,26 @@ class AddUser:
         self.__string_pw= self.__entry_pw.get()
         self.__string_check_pw= self.__entry_check_pw.get()
         result=messagebox.askyesno("Add User","Are you sure about your information?")
-        if result ==1: self.__submitAddUserConfrim()
+        if result ==1:
+            Infor="1|"+self.__string_name+"|"+self.__string_pin
+            State=1
+            TriggerLoopRequestUID=1
+            result1= messagebox.askyesno("Insert Card","Please insert your card befor pressing yes.")
+            if result1==1:
+                self.__submitAddUserConfrim()
+            else:
+                Infor =""
+                State=0
+                TriggerLoopRequestUID=0
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            check = 1
             if check==1:
                 # if check = 1 do else print fail
-                uid=communicate.getUID()
-                #uid="82 BB 44 96"
+                #uid=communicate.getUID()
+                uid="82 BB 44 96"
                 #print(uid)
                 #send infor to arduino to get RFID UID
                 list = {}
@@ -1080,9 +1094,9 @@ class BorrowedEquipments:
     def __borrowDevices(self):
         askUID=messagebox.askyesno("Ask UID","Please insert your card")
         if askUID==1:
-            check=communicate.sendRequestUID()
-            uid=communicate.getUID()
-            #uid="82 BB 44 96"
+            #check=communicate.sendRequestUID()
+            #uid=communicate.getUID()
+            uid="82 BB 44 96"
             id=data.getIDWithRFID_UID(uid)
             if id!=0:
                 cursor= self.__list_box.curselection()
@@ -1146,9 +1160,9 @@ class ReturnBorrowedDevicesWindow:
 
     def __insertCardReturn(self):
         # ask UID
-        check=communicate.sendRequestUID()
-        uid=communicate.getUID()
-        #uid="82 BB 44 96"
+        #check=communicate.sendRequestUID()
+        #uid=communicate.getUID()
+        uid="82 BB 44 96"
         id= data.getIDWithRFID_UID(uid)
         list = self.__bdl.getInforWithNameAndID(self.__name, id)
         if list!=0:
@@ -1375,7 +1389,7 @@ data = Data()
 database = Data()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-communicate= SendToArduino("0")
+#communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -1384,16 +1398,19 @@ def loopGUI():
     root.mainloop()
 
 
-# def loopRECEIVE():
-#     while TRUE:
-#         communicate.receiveInfor()
+def SlaveFunction():
+     if State==1:
+         print(Infor,TriggerLoopRequestUID)
+         #check, TriggerLoopRequestUID=communicate.sendInfor(Infor, TriggerLoopRequestUID)
+         #State=0
     
 
 if __name__=="__main__":
+    p1 = Process(target=SlaveFunction)
+    p1.start()
     p2=Process(target=loopGUI)
     p2.start()
-    #p1=Process(target=loopRECEIVE)
-    #p1.start()
+
     
 
 
