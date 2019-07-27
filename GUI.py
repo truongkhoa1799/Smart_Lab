@@ -24,8 +24,8 @@ DATA_FROM_ARDUINO=""
 ADMIN_ID="123"
 ADMIN_PASS="1"
 
-MENU_HEIGHT = 300
-MENU_WIDTH = 350
+MENU_HEIGHT = 600
+MENU_WIDTH = 1000
 #-------------------------------------------------------------------------------------------------------
 class MainMenu:
     def __init__(self, master):
@@ -37,7 +37,7 @@ class MainMenu:
         self.load = Image.open("SmartLab.png")
         self.render = ImageTk.PhotoImage(self.load)
         self.__logo = Label(self.master, image=self.render, bg='#ffffff')
-        self.__logo.place(relx=0.27, rely=0)
+        self.__logo.place(relx=0.42, rely=0.1)
         self.__controlUserBut()
         self.__controlLabBut()
         self.__controlDevicesBut()
@@ -49,7 +49,7 @@ class MainMenu:
         self.control_user_but.place(relx=0.2, rely=0.28, relheight= 0.15, relwidth = 0.6)
 
     def __controlLabBut(self):
-        self.control_lab_but = Button(self.master, bg='#00b386', text="Control Lab", fg='#ffffff',font=('time new roman', 18, 'bold'))
+        self.control_lab_but = Button(self.master, bg='#00b386', text="Control Lab", fg='#ffffff',font=('time new roman', 18, 'bold'), command=self.__controlLab)
         self.control_lab_but.place(relx=0.2, rely=0.45, relheight=0.15, relwidth=0.6)
 
     def __logOutBut(self):
@@ -66,6 +66,10 @@ class MainMenu:
     def __controlDevices(self):
         devices=DevicesMenu(self.master)
         devices.mainMenu()
+
+    def __controlLab(self):
+        controlLab=ControlLab(self.master)
+        controlLab.mainMenu()
 
     def __logOut(self):
         result=messagebox.askyesno("Log Out","Are you sure to log out?")
@@ -90,7 +94,7 @@ class SignIn:
         self.load = Image.open("SmartLab.png")
         self.render = ImageTk.PhotoImage(self.load)
         self.__logo= Label(self.__main_frame, image=self.render, bg='#ffffff' )
-        self.__logo.place(relx=0.27, rely=0)
+        self.__logo.place(relx=0.42, rely=0.1)
         self.__ID()
         self.__PASSWORD()
         self.__LogInBut()
@@ -100,27 +104,27 @@ class SignIn:
         self.__load_signinlogo = Image.open("signInID.png")
         self.__render_signinlogo = ImageTk.PhotoImage(self.__load_signinlogo)
         self.__signinlogo = Label(self.__main_frame, image=self.__render_signinlogo, bg='#ffffff')
-        self.__signinlogo.place(relx=0.4, rely=0.27,relheight=0.2, relwidth=0.2)
+        self.__signinlogo.place(relx=0.45, rely=0.3,relheight=0.1, relwidth=0.1)
 
     def __ID(self):
         self.__load_SignInID = Image.open("SignInUserLogo.png")
         self.__render_SignInID = ImageTk.PhotoImage(self.__load_SignInID)
         self.__SignInID = Label(self.__main_frame, image=self.__render_SignInID, bg='#ffffff')
-        self.__SignInID.place(relx=0.1, rely=0.5, relheight=0.1, relwidth=0.1)
+        self.__SignInID.place(relx=0.2, rely=0.5, relheight=0.05, relwidth=0.05)
         self.__entry_ID=Entry(self.__main_frame, bg ='#f2f2f2', borderwidth=1.5,disabledbackground='#595959')
-        self.__entry_ID.place(relx=0.2, rely=0.5, relwidth=0.6, relheight=0.1)
+        self.__entry_ID.place(relx=0.3, rely=0.5, relwidth=0.4, relheight=0.05)
 
     def __PASSWORD(self):
         self.__load_SignInPass = Image.open("SignInPass.png")
         self.__render_SignInPass = ImageTk.PhotoImage(self.__load_SignInPass)
         self.__SignInPass = Label(self.__main_frame, image=self.__render_SignInPass, bg='#ffffff')
-        self.__SignInPass.place(relx=0.1, rely=0.65, relheight=0.1, relwidth=0.1)
+        self.__SignInPass.place(relx=0.2, rely=0.6, relheight=0.05, relwidth=0.05)
         self.__entry_PASS = Entry(self.__main_frame,  bg='#f2f2f2', borderwidth=1.5,disabledbackground='#f2f2f2', show="*")
-        self.__entry_PASS.place(relx=0.2, rely=0.65, relwidth=0.6, relheight=0.1)
+        self.__entry_PASS.place(relx=0.3, rely=0.6, relwidth=0.4, relheight=0.05)
 
     def __LogInBut(self):
         self.__signin_button = Button(self.__master, bg='#00b386', text="Log In", fg='#ffffff',font=('time new roman', 20, 'bold'), command =self.__LogIn)
-        self.__signin_button.place(relx=0.2, rely=0.8, relheight=0.14, relwidth=0.6)
+        self.__signin_button.place(relx=0.3, rely=0.7, relheight=0.1, relwidth=0.4)
 
 
     def __LogIn(self):
@@ -227,72 +231,74 @@ class AddUser:
     def __backButton(self):
         self.__back_button= Button(self.__master, text="Back",  command= self.__backToControlUser, bd=4,font=("time new roman", 12, 'bold'), fg ='#ffffff', bg ='#00b386')
         self.__back_button.config(relief=RAISED)
-        self.__back_button.place(relx=0.3, rely=0.87, relheight=0.1, relwidth=0.2)
+        self.__back_button.place(relx=0.3, rely=0.86, relheight=0.1, relwidth=0.2)
 
     def __submitButton(self):
         self.__submit_button = Button(self.__master, text="Submit",  command=self.__submitAddUser, bd=4,font=("time new roman", 12,'bold'), fg ='#ffffff', bg ='#00b386')
         self.__submit_button.config(relief=RAISED)
-        self.__submit_button.place(relx=0.5, rely=0.87, relheight=0.1, relwidth=0.2)
+        self.__submit_button.place(relx=0.5, rely=0.86, relheight=0.1, relwidth=0.2)
 
     def __nameUser(self):
-        self.__label_name= Label(self.__master, text ="Name:",font=("times new roman", 12),anchor= 'w', bg= '#ffffff')
-        self.__label_name.place(relx=0.025, rely=0.05, relheight=0.08, relwidth=0.2)
+        self.__label_name= Label(self.__master, text ="Name:",font=("times new roman", 14),anchor= 'w', bg= '#ffffff')
+        self.__label_name.place(relx=0.25, rely=0.03, relheight=0.05, relwidth=0.1)
 
         self.__entry_name= Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5, relief =RIDGE)
-        self.__entry_name.place(relx=0.25, rely=0.05, relwidth=0.7, relheight=0.1)
+        self.__entry_name.place(relx=0.25, rely=0.08, relwidth=0.5, relheight=0.05)
 
     def __Gender(self):
-        self.__label_gender = Label(self.__master, text="Gender:", font=("times new roman", 12), anchor= 'w',bg= '#ffffff')
-        self.__label_gender.place(relx=0.025, rely=0.15, relheight=0.08, relwidth=0.2)
+        self.__label_gender = Label(self.__master, text="Gender:", font=("times new roman", 14), anchor= 'w',bg= '#ffffff')
+        self.__label_gender.place(relx=0.25, rely=0.13, relheight=0.05, relwidth=0.1)
 
         self.__entry_gender = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
-        self.__entry_gender.place(relx=0.25, rely=0.15, relwidth=0.7, relheight=0.1)
-
-    def __SIDUser(self):
-        self.__label_SID = Label(self.__master, text="Student ID: ", font=("times new roman", 12),anchor= 'w',bg= '#ffffff')
-        self.__label_SID.place(relx=0.025, rely=0.25, relheight=0.08, relwidth=0.2)
-
-        self.__entry_SID = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5, relief =RIDGE)
-        self.__entry_SID.place(relx=0.25, rely=0.25, relwidth=0.7, relheight=0.1)
+        self.__entry_gender.place(relx=0.25, rely=0.18, relwidth=0.5, relheight=0.05)
 
     def __Email(self):
-        self.__label_email = Label(self.__master, text="Email:", font=("times new roman", 12),anchor= 'w',bg= '#ffffff')
-        self.__label_email.place(relx=0.025, rely=0.35, relheight=0.08, relwidth=0.2)
+        self.__label_email = Label(self.__master, text="Email:", font=("times new roman", 14),anchor= 'w',bg= '#ffffff')
+        self.__label_email.place(relx=0.25, rely=0.23, relheight=0.05, relwidth=0.1)
 
         self.__entry_email = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
-        self.__entry_email.place(relx=0.25, rely=0.35, relwidth=0.7, relheight=0.1)
+        self.__entry_email.place(relx=0.25, rely=0.28, relwidth=0.5, relheight=0.05)
+
+    def __SIDUser(self):
+        self.__label_SID = Label(self.__master, text="Student ID: ", font=("times new roman", 14),anchor= 'w',bg= '#ffffff')
+        self.__label_SID.place(relx=0.25, rely=0.33, relheight=0.05, relwidth=0.1)
+
+        self.__entry_SID = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5, relief =RIDGE)
+        self.__entry_SID.place(relx=0.25, rely=0.38, relwidth=0.5, relheight=0.05)
+
+
 
     def __Pin(self):
-        self.__label_pin = Label(self.__master, text="Pin(4digits):", font=("times new roman", 12), anchor= 'w',bg= '#ffffff')
-        self.__label_pin.place(relx=0.025, rely=0.45, relheight=0.08, relwidth=0.2)
+        self.__label_pin = Label(self.__master, text="Pin(4digits):", font=("times new roman", 14), anchor= 'w',bg= '#ffffff')
+        self.__label_pin.place(relx=0.25, rely=0.43, relheight=0.05, relwidth=0.1)
 
         self.__entry_pin = Entry(self.__master,show="*",bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
-        self.__entry_pin.place(relx=0.25, rely=0.45, relwidth=0.7, relheight=0.1)
+        self.__entry_pin.place(relx=0.25, rely=0.48, relwidth=0.5, relheight=0.05)
 
 
 
     def __checkPin(self):
-        self.__label_check_pin = Label(self.__master, text="Check Pin:", font=("times new roman", 12), anchor='w', bg='#ffffff')
-        self.__label_check_pin.place(relx=0.025, rely=0.55, relheight=0.08, relwidth=0.2)
+        self.__label_check_pin = Label(self.__master, text="Again Pin:", font=("times new roman", 14), anchor='w', bg='#ffffff')
+        self.__label_check_pin.place(relx=0.25, rely=0.53 ,relheight=0.05, relwidth=0.1)
 
         self.__entry_check_pin = Entry(self.__master, show="*", bg='#f2f2f2', borderwidth=1.5, relief=RIDGE)
-        self.__entry_check_pin.place(relx=0.25, rely=0.55, relwidth=0.7, relheight=0.1)
+        self.__entry_check_pin.place(relx=0.25, rely=0.58, relwidth=0.5, relheight=0.05)
 
     def __Password(self):
-        self.__label_pw = Label(self.__master, text="Password:", font=("times new roman", 12), anchor= 'w',bg= '#ffffff')
-        self.__label_pw.place(relx=0.025, rely=0.65, relheight=0.08, relwidth=0.2)
+        self.__label_pw = Label(self.__master, text="Password:", font=("times new roman", 14), anchor= 'w',bg= '#ffffff')
+        self.__label_pw.place(relx=0.25, rely=0.63, relheight=0.05, relwidth=0.1)
 
         self.__entry_pw = Entry(self.__master,show="*",bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
-        self.__entry_pw.place(relx=0.25, rely=0.65, relwidth=0.7, relheight=0.1)
+        self.__entry_pw.place(relx=0.25, rely=0.68, relwidth=0.5, relheight=0.05)
 
 
 
     def __checkPassword(self):
-        self.__label_check_pw = Label(self.__master, text="CheckPass:", font=("times new roman", 12), anchor='w', bg='#ffffff')
-        self.__label_check_pw.place(relx=0.025, rely=0.75, relheight=0.08, relwidth=0.2)
+        self.__label_check_pw = Label(self.__master, text="Again Password:", font=("times new roman", 12), anchor='w', bg='#ffffff')
+        self.__label_check_pw.place(relx=0.25, rely=0.73, relheight=0.05, relwidth=0.12)
 
         self.__entry_check_pw = Entry(self.__master, show="*", bg='#f2f2f2', borderwidth=1.5, relief=RIDGE)
-        self.__entry_check_pw.place(relx=0.25, rely=0.75, relwidth=0.7, relheight=0.1)
+        self.__entry_check_pw.place(relx=0.25, rely=0.78, relwidth=0.5, relheight=0.05)
 
 
 
@@ -548,19 +554,21 @@ class ChangePass:
         addUser = ControlUser(self.__master)
         addUser.mainMenu()
 
+
+
     def __entrySID(self):
-        self.__label_SID = Label(self.__master, text="Student ID: ", font=("times new roman", 12), anchor='w', bg='#ffffff')
-        self.__label_SID.place(relx=0.025, rely=0.35, relheight=0.08, relwidth=0.2)
+        self.__label_SID = Label(self.__master, text="Student ID: ", font=("times new roman", 14), anchor='w', bg='#ffffff')
+        self.__label_SID.place(relx=0.25, rely=0.35, relheight=0.05, relwidth=0.1)
 
         self.__entry_SID = Entry(self.__master, bg ='#f2f2f2', borderwidth=1.5, relief=RIDGE)
-        self.__entry_SID.place(relx=0.25, rely=0.35, relwidth=0.7, relheight=0.1)
+        self.__entry_SID.place(relx=0.25, rely=0.4, relwidth=0.5, relheight=0.05)
 
     def __entrypass(self):
-        self.__label_pass = Label(self.__master, text="New Key: ", font=("times new roman", 12), anchor='w', bg='#ffffff')
-        self.__label_pass.place(relx=0.025, rely=0.55, relheight=0.08, relwidth=0.2)
+        self.__label_pass = Label(self.__master, text="New Key: ", font=("times new roman", 14), anchor='w', bg='#ffffff')
+        self.__label_pass.place(relx=0.25, rely=0.5, relheight=0.05, relwidth=0.1)
 
         self.__entry_pass = Entry(self.__master, bg ='#f2f2f2', borderwidth=1.5, relief=RIDGE, show="*")
-        self.__entry_pass.place(relx=0.25, rely=0.55, relwidth=0.7, relheight=0.1)
+        self.__entry_pass.place(relx=0.25, rely=0.55, relwidth=0.5, relheight=0.05)
 
     def __changePass(self):
         Pass= self.__entry_pass.get()
@@ -582,7 +590,7 @@ class DeleteUser:
     def __init__(self, master):
         self.__master= master
         self.__arrayList = []
-        canvas = Canvas(self.__master, height=400, width=1100)
+        canvas = Canvas(self.__master, height=MENU_HEIGHT, width=MENU_WIDTH)
         canvas.pack()
 
 
@@ -699,6 +707,79 @@ class DevicesMenu:
         mainMenu.mainMenu()
 
 #-------------------------------------------------------------------------------------------------------
+class ControlLab:
+    def __init__(self,master):
+        self.__master=master
+
+    def mainMenu(self):
+        self.__main_frame = Frame(self.__master, bg='#ffffff')
+        self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+        self.load = Image.open("SmartLab.png")
+        self.render = ImageTk.PhotoImage(self.load)
+        self.__logo = Label(self.__master, image=self.render, bg='#ffffff')
+        self.__logo.place(relx=0.42, rely=0.1)
+        self.__scheduleLabBut()
+        self.__backButton()
+
+    def __scheduleLabBut(self):
+        self.control_user_but = Button(self.__master, bg='#00b386', text="Schedule Lab", fg='#ffffff',font=('time new roman', 18, 'bold'), command=self.__scheduleLab)
+        self.control_user_but.place(relx=0.2, rely=0.28, relheight=0.15, relwidth=0.6)
+
+    # def __controlLabBut(self):
+    #     self.control_lab_but = Button(self.master, bg='#00b386', text="Control Lab", fg='#ffffff',
+    #                                   font=('time new roman', 18, 'bold'), command=self.__controlLab)
+    #     self.control_lab_but.place(relx=0.2, rely=0.45, relheight=0.15, relwidth=0.6)
+    #
+    # def __logOutBut(self):
+    #     self.load_LogoutBut = Image.open("LogoutBut.png")
+    #     self.render_LogoutBut = ImageTk.PhotoImage(self.load_LogoutBut)
+    #     self.log_out_but = Button(self.master, image=self.render_LogoutBut, bg='#ffffff', relief=FLAT,
+    #                               command=self.__logOut)
+    #     self.log_out_but.place(relx=0.42, rely=0.8, relheight=0.18, relwidth=0.18)
+    #
+    # def __controlDevicesBut(self):
+    #     self.control_device_but = Button(self.master, bg='#00b386', text="Control Devices", fg='#ffffff',
+    #                                      font=('time new roman', 18, 'bold'), command=self.__controlDevices)
+    #     self.control_device_but.place(relx=0.2, rely=0.62, relheight=0.15, relwidth=0.6)
+
+    def __scheduleLab(self):
+        print("1")
+
+    # def __controlLab(self):
+    #     controlLab = ControlLab(self.master)
+    #     controlLab.mainMenu()
+    #
+    # def __logOut(self):
+    #     result = messagebox.askyesno("Log Out", "Are you sure to log out?")
+    #     if result == 1:
+    #         SignInScreen.SignInScreen()
+    #     else:
+    #         self.mainMenu()
+    #
+    # def __controlUser(self):
+    #     controlUser = ControlUser(self.master)
+    #     controlUser.mainMenu()
+
+    def __backButton(self):
+        self.__back_button = Button(self.__master, text="Back", command=self.__backTomainMenu, bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__back_button.config(relief=RAISED)
+        self.__back_button.place(relx=0.3, rely=0.85, relheight=0.1, relwidth=0.4)
+
+    def __backTomainMenu(self):
+        mainemu = MainMenu(self.__master)
+        mainemu.mainMenu()
+#-------------------------------------------------------------------------------------------------------
+
+class ScheduleLab:
+    def __init__(self, master):
+        self.__master=master
+
+    def mainMenu(self):
+        self.__main_frame = Frame(self.__master, bg='#ffffff')
+        self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+        
+#-------------------------------------------------------------------------------------------------------
+
 
 class ControlDevices:
     def __init__(self, master):

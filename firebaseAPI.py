@@ -216,7 +216,7 @@ class MyFirebase:
             print("Add login history failed")
             return False
 
-myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+# myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 # myfirebase.updateUserList({
 #     1710321: {
 #         "Name": "Ngo Duc Tuan",
