@@ -10,7 +10,7 @@ from multiprocessing import Process
 from firebaseAPI import MyFirebase
 from AccountStatus import AccountStatus
 
-#from CommunicateArduino import SendToArduino
+from CommunicateArduino import SendToArduino
 
 
 LENGTH_OF_PIN =4
@@ -221,8 +221,8 @@ class AddUser:
         self.__submitButton()
         self.__nameUser()
         self.__Gender()
-        self.__SIDUser()
         self.__Email()
+        self.__SIDUser()
         self.__Pin()
         self.__checkPin()
         self.__Password()
@@ -323,12 +323,12 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
-            check = 1
+            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            #check = 1
             if check==1:
-                # if check = 1 do else print fail
-                #uid=communicate.getUID()
-                uid="82 BB 44 96"
+                #if check == 1 do else print fail
+                uid=communicate.getUID()
+                #uid="82 BB 44 96"
                 #print(uid)
                 #send infor to arduino to get RFID UID
                 list = {}
@@ -352,7 +352,7 @@ class AddUser:
                 else: messagebox.showinfo("Add User","Fail")
             elif check==0: messagebox.showinfo("Add User","Fail")
             elif check==2: messagebox.showinfo("Add User","Used Tag")
-            elif check==3: messagebox.showinfo("Add User","Please insert your Tag")
+            elif check==3: messagebox.showinfo("Add User","Please insert your Tag Again")
         elif self.__checkAddUsers()==0:
             messagebox.showwarning("Add Users", "Add unsuccessfully. Please fulfill your information!")
             #self.mainMenu()
@@ -1166,19 +1166,24 @@ class BorrowedEquipments:
     def __borrowDevices(self):
         askUID=messagebox.askyesno("Ask UID","Please insert your card")
         if askUID==1:
-            #check=communicate.sendRequestUID()
-            #uid=communicate.getUID()
-            uid="82 BB 44 96"
-            id=data.getIDWithRFID_UID(uid)
-            if id!=0:
-                cursor= self.__list_box.curselection()
-                if cursor!=():
-                    root= Tk()
-                    rentDevices= RentDevices(root,id, self.__arrayKey[int(cursor[0])])
-                    rentDevices.mainMenu()
-                else:
-                    messagebox.showwarning("Error","Please choose your device!")
-            else: messagebox.showwarning("Rent Devices","You are not allowed to rent devices!")
+            check=communicate.sendRequestUID()
+            if check ==1:
+                uid=communicate.getUID()
+                #uid="82 BB 44 96"
+                id=data.getIDWithRFID_UID(uid)
+                if id!=0:
+                    cursor= self.__list_box.curselection()
+                    if cursor!=():
+                        root= Tk()
+                        rentDevices= RentDevices(root,id, self.__arrayKey[int(cursor[0])])
+                        rentDevices.mainMenu()
+                    else:
+                        messagebox.showwarning("Error","Please choose your device!")
+                else: messagebox.showwarning("Rent Devices","You are not allowed to rent devices!")
+            elif check==0:
+                messagebox.showwarning("Rent Devices","FAil")
+            elif check==2:
+                messagebox.showwarning("Rent Devices","Please insert your Tag!")
 
 
     def __returnButton(self):
@@ -1232,16 +1237,22 @@ class ReturnBorrowedDevicesWindow:
 
     def __insertCardReturn(self):
         # ask UID
-        #check=communicate.sendRequestUID()
-        #uid=communicate.getUID()
-        uid="82 BB 44 96"
-        id= data.getIDWithRFID_UID(uid)
-        list = self.__bdl.getInforWithNameAndID(self.__name, id)
-        if list!=0:
-            self.__ID = id
-            self.__amount=list["Amount"]
-            self.__showInfor(list)
-        else: messagebox.showwarning("Return Devices","There is no users in system")
+        check=communicate.sendRequestUID()
+        if check ==1:
+            uid=communicate.getUID()
+            #uid="82 BB 44 96"
+            id= data.getIDWithRFID_UID(uid)
+            list = self.__bdl.getInforWithNameAndID(self.__name, id)
+            if list!=0:
+                self.__ID = id
+                self.__amount=list["Amount"]
+                self.__showInfor(list)
+            else: messagebox.showwarning("Return Devices","There is no users in system")
+        elif check==0:
+            messagebox.showwarning("Rent Devices","FAil")
+        elif check==2:
+            messagebox.showwarning("Rent Devices","Please insert your Tag!")
+	    
 
     def __showInfor(self,list):
         self.__frame = Frame(self.__root, bg='#ffffff')
@@ -1461,7 +1472,7 @@ data = Data()
 database = Data()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-#communicate= SendToArduino("0")
+communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -1469,17 +1480,19 @@ SignInScreen.SignInScreen()
 def loopGUI():
     root.mainloop()
 
-# def Receive():
-#     count=0
-#     print("start")
-#     while count<1000:
-#         time.sleep(0.01)
-#         count=count+1
-#     print("end")
+def Receive():
+    while TRUE:
+        dataForDoor=Data()
+        rfid_uid=communicate.receiveInfor()
+        if rfid_uid!="b''" and dataForDoor.checkRFID_UID(rfid_uid)==1:
+            communicate.Print()
+        else: print("invalid")
+    time.sleep(1)
+
 
 if __name__=="__main__":
-    # p1 = Process(target=Receive)
-    # p1.start()
+    p1 = Process(target=Receive)
+    p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 

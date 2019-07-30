@@ -74,6 +74,11 @@ class Data:
                 return i
         return 0
 
+    def checkRFID_UID(self,RFID_UID):
+        for i in self.__list:
+            if self.__list[i]["RFID UID"]==RFID_UID:
+                return 1
+        return 0
 
     def __writeIntoFile(self):
         file = open("data.txt", "w")
