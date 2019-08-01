@@ -1,7 +1,9 @@
 from datetime import date, datetime, timezone,time
 import math
 
-ROOT = datetime(year = 2019, month= 7, day=31, hour=6)
+#number of tiet / week =84
+#=> week 3 has index of tiet= 84(tiet)+1
+ROOT = datetime(year = 2019, month= 7, day=29, hour=6)
 timeStampRoot= datetime.timestamp(ROOT)
 
 
@@ -26,7 +28,7 @@ class Room:
             list["End"]= end
             list["Room"]= room
             list["Date"]=date
-            if course not in self.__list["Classes"]:
+            if room not in self.__list["Classes"]:
                 self.__list["Classes"][room]=[0]*4033
                 self.__list["Course detail"][room]={}
             reference = self.__determineIndex(int(start), int(day), int(month), int(year))
@@ -90,7 +92,6 @@ class Room:
     def add(self, room, lecturer, course, date, start, end):
         day, month, year = self.__changeDate(date)
         index = self.__determineIndex(int(start), int(day), int(month), int(year))
-        print(index)
         if room not in self.__list["Classes"]:
             self.__list["Classes"][room]=[0]*4033
             self.__list["Course detail"][room] = {}
@@ -115,7 +116,12 @@ class Room:
         else: return 0
 
 
-
+    def __changeToWeek(self,day, month, year):
+        now = datetime(year=year, month=month, day=day, hour=6)
+        timeStampNow=datetime.timestamp(now)
+        diff=timeStampNow-timeStampRoot
+        no_weeks=math.floor(diff/604800)
+        return (no_weeks)
 
     def check(self, room, tiet, day, month, year):
         #tiet is integer
@@ -123,11 +129,46 @@ class Room:
         if self.__list["Classes"][room][index]==0: return 1
         else: return 0
         #1 co 0 khong co
+    def determineStartAndendofWeekWith(self, day, month, year):
+        week= self.__changeToWeek(day,month,year)
+        start=84*week+1
+        end=84*(week+1)
+        return start, end
+    def getCourseDetailWithRoomAndStartEnd(self,start,end,Room):
+        list=[]
+        list.append("")
+        count=0
+        #print(start, end, Room)
+        for i in range(start,end+1):
+            count=count+1
+            list.append("")
+            index=self.__list["Classes"][Room][i]
+            if index in self.__list["Course detail"][Room]:
+                print(index)
+                list[count]=self.__list["Course detail"][Room][index]
+            else:
+                temp={}
+                temp["Lecturer"]=""
+                temp["Course"]=""
+                list[count]=temp
+        return list
+    def getDetailOfWeek(self, day, month, year):
+        week=self.__changeToWeek(day, month, year)
+        timeStampStart= week * 604800 +  timeStampRoot
+        start= datetime.fromtimestamp(timeStampStart)
+        timeStampEnd=timeStampStart+518400
+        end=datetime.fromtimestamp(timeStampEnd)
+        string_start=str(start.date())
+        string_end=str(end.date())
+        return week,string_start, string_end
+        #return week,startWeek, endWeek
 
 
 
-room= Room()
-print(room.add("C5_202","Thien","Programming","02-08-2019","4","6"))
-print(room.getList())
+
+# room= Room()
+# print(room.getDetailOfWeek(21,8,2019))
+# print(room.add("C5_202","Thien","Programming","02-08-2019","4","6"))
+# print(room.getList())
 
 

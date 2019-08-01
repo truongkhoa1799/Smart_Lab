@@ -9,6 +9,8 @@ import time
 from multiprocessing import Process
 from firebaseAPI import MyFirebase
 from AccountStatus import AccountStatus
+from RoomList import RoomList
+from Room import Room
 
 #from CommunicateArduino import SendToArduino
 
@@ -743,8 +745,8 @@ class ControlLab:
     #     self.control_device_but.place(relx=0.2, rely=0.62, relheight=0.15, relwidth=0.6)
 
     def __scheduleLab(self):
-        print("1")
-
+        scheduleLab= ScheduleLab(self.__master)
+        scheduleLab.mainMenu()
     # def __controlLab(self):
     #     controlLab = ControlLab(self.master)
     #     controlLab.mainMenu()
@@ -773,12 +775,48 @@ class ControlLab:
 class ScheduleLab:
     def __init__(self, master):
         self.__master=master
+        self.__roomList=RoomList()
+        self.__array=[]
 
     def mainMenu(self):
         self.__main_frame = Frame(self.__master, bg='#ffffff')
         self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+        self.__scrollFrame()
+        self.__addButton()
+        self.__checkButton()
+        self.__backButton()
+
+    def __backButton(self):
+        self.__back_button = Button(self.__master, text="Back", command=self.__back, bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__back_button.config(relief=RAISED)
+        self.__back_button.place(relx=0.6, rely=0.85, relheight=0.1, relwidth=0.2)
+    def __back(self):
+        control=ControlLab(self.__master)
+        control.mainMenu()
+
+    def __checkButton(self):
+        self.__delete_button = Button(self.__master, text="Check schedule", bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386', command = self.__checkSchedule)
+        self.__delete_button.config(relief=RAISED)
+        self.__delete_button.place(relx=0.4, rely=0.85, relheight=0.1, relwidth=0.2)
+
+
+    def __addButton(self):
+        self.__add_button = Button(self.__master, text="Add Room", command=self.__addRoom, bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__add_button.config(relief=RAISED)
+        self.__add_button.place(relx=0.2, rely=0.85, relheight=0.1, relwidth=0.2)
+    def __addRoom(self):
+        root=Tk()
+        add_room=addRoom(root,self.__master)
+        add_room.mainMenu()
+    def __checkSchedule(self):
+        index= self.__list_box.curselection()
+        if index!=():
+            index=int(index[0])
+            checkSchedule= CheckSchedule(self.__master, self.__array[index])
+            checkSchedule.mainMenu()
+        else: messagebox.showinfo("Check Schedule","Please choose one room")
     def __scrollFrame(self):
-        self.__showTag=Label(self.__master,text="STT  Name                 Amount       Current", font =("time new roman", 12), bg='#ffffff', anchor='w')
+        self.__showTag=Label(self.__master,text="STT    Name                ", font =("time new roman", 12), bg='#ffffff', anchor='w')
         self.__showTag.place(relx=0, rely=0, relheight=0.1, relwidth=0.9)
         #----------------------------------------------------------------
         self.__scroll_frame = Frame(self.__master, bg='#ebebe0')
@@ -790,13 +828,15 @@ class ScheduleLab:
         self.__scroll_barX = Scrollbar(self.__scroll_frame, orient=HORIZONTAL)
         self.__scroll_barX.pack(side=BOTTOM, fill=X)
 
-        self.__list_box=Listbox(self.__scroll_frame,yscrollcommand = self.__scroll_barY.set, xscrollcommand= self.__scroll_barX.set)
-        devices=Devices()
-        list=devices.getList()
+        self.__list_box=Listbox(self.__scroll_frame,yscrollcommand = self.__scroll_barY.set, xscrollcommand= self.__scroll_barX.set,font=("time new roman", 14))
+        list=self.__roomList.getRoom()
         count=0
         for i in list:
-
+            infor = "  "+str(count+1)+"   "+i
+            self.__array.append("")
+            self.__array[count]=i
             self.__list_box.insert(END, infor)
+            count=count+1
         self.__list_box.place(relx=0, rely=0, relheight=0.92, relwidth=0.95)
         # ----------------------------------------------------------------
         self.__scroll_barY.config(command= self.__list_box.yview)
@@ -804,8 +844,535 @@ class ScheduleLab:
 
         
 #-------------------------------------------------------------------------------------------------------
+class CheckSchedule:
+    def __init__(self,master, nameroom):
+        self.__master=master
+        self.__room=Room()
+        self.__name_room=nameroom
+        self.__main_frame = Frame(self.__master, bg='#ffffff')
+        self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+    def mainMenu(self):
+        self.__checkButton()
+        self.__bookButton()
+        self.__backButton()
+        self.__insertDate()
+
+    def __backButton(self):
+        self.__back_button = Button(self.__master, text="Back", command=self.__back, bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__back_button.config(relief=RAISED)
+        self.__back_button.place(relx=0.6, rely=0.87, relheight=0.1, relwidth=0.2)
+
+    def __insertDate(self):
+        self.__label = Label(self.__master, text="INSERT DATE (dd-mm-yy): ", font=("times new roman", 13), anchor='w',bg='#ffffff')
+        self.__label.place(relx=0.4, rely=0, relheight=0.05, relwidth=0.3)
+
+        self.__entry = Entry(self.__master, bg='#f2f2f2', borderwidth=1.5, relief=RIDGE, font=("time new roman", 13))
+        self.__entry.place(relx=0.4, rely=0.05, relwidth=0.2, relheight=0.05)
+
+    def __back(self):
+        schedule = ScheduleLab(self.__master)
+        schedule.mainMenu()
+
+    def __checkButton(self):
+        self.__delete_button = Button(self.__master, text="Check", bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386', command = self.__check)
+        self.__delete_button.config(relief=RAISED)
+        self.__delete_button.place(relx=0.2, rely=0.87, relheight=0.1, relwidth=0.2)
+    def __bookButton(self):
+        self.__delete_button = Button(self.__master, text="Book Room", bd=4,font=("time new roman", 12, 'bold'), fg='#ffffff', bg='#00b386', command= self.__book)
+        self.__delete_button.config(relief=RAISED)
+        self.__delete_button.place(relx=0.4, rely=0.87, relheight=0.1, relwidth=0.2)
+    def __book(self):
+        book_room= BookRoom(self.__master, self.__name_room)
+        book_room.mainMenu()
+    def __changeDate(self,string):
+        string=string+"-"
+        arr=["","",""]
+        count=0
+        for i in string:
+            if i!="-":
+                arr[count]=arr[count]+i
+            else: count=count+1
+        return arr[0],arr[1],arr[2]
+    def __check(self):
+        self.__string_entry=self.__entry.get()
+        day,month,year=self.__changeDate(self.__string_entry)
+        start,end=self.__room.determineStartAndendofWeekWith(int(day),int(month),int(year))
+        list=self.__room.getCourseDetailWithRoomAndStartEnd(start,end,self.__name_room)
+        self.__interface(list,day, month, year)
+
+    def __interface(self,list, day, month, year):
+        week,start, end =self.__room.getDetailOfWeek(int(day), int(month), int(year))
+        string= "Week "+str(week+1)+" : "+start+"  to  "+end
+        self.__interface_frame=Frame(self.__master, bg='#00b386', bd=4)
+        self.__interface_frame.place(relx=0, rely=0.12, relheight=0.73, relwidth=1)
+        RoomName = Label(self.__master, text=self.__name_room, bg='#f2f2f2', borderwidth=1.5, relief=RIDGE,font=("time new roman", 12))
+        RoomName.place(relx=0.62, rely=0, relheight=0.05, relwidth=0.15)
+        date=Label(self.__master, text=string,bg='#f2f2f2', borderwidth=1.5, relief=RIDGE, font=("time new roman",12))
+        date.place(relx=0.62, rely=0.05, relheight=0.05, relwidth=0.3)
+        self.__column1()
+        self.__column2(list)
+        self.__column3(list)
+        self.__column4(list)
+        self.__column5(list)
+        self.__column6(list)
+        self.__column7(list)
+        self.__column8(list)
+    def __column1(self):
+        column1_label = Label(self.__interface_frame,bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text="1  (6:00-7:00)", bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text="2  (7:00-8:00)", bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text="3  (8:00-9:00)",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text="4  (9:00-10:00)",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text="5  (10:00-11:00)", bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text="6  (11:00-12:00)", bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text="7  (12:00-13:00)", bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text="8  (13:00-14:00)", bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text="9  (14:00-15:00)", bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text="10 (15:00-16:00)", bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text="11 (16:00-17:00)", bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text="12 (17:00-18:00)", bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column2(self,list):
+        column1_label = Label(self.__interface_frame,text="Monday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.125, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[1]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.125, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame, text=list[2]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column3_label.place(relx=0.125, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[3]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.125, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[4]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.125, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[5]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.125, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[6]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.125, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[7]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.125, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[8]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.125, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[9]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.125, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[10]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.125, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[11]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.125, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[12]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.125, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column3(self,list):
+        column1_label = Label(self.__interface_frame,text="Tuesday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.25, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[13]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.25, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[14]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.25, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[15]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.25, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[16]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.25, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[17]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.25, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[18]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.25, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[19]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.25, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[20]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.25, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[21]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.25, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[22]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.25, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[23]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.25, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[24]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.25, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column4(self,list):
+        column1_label = Label(self.__interface_frame,text="Wednesday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.375, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[25]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.375, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[26]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.375, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[27]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.375, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[28]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.375, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[29]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.375, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[30]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.375, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[31]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.375, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[32]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.375, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[33]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.375, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[34]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.375, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[35]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.375, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[36]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.375, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column5(self,list):
+        column1_label = Label(self.__interface_frame,text="Thursday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.5, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[37]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.5, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[38]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.5, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[39]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.5, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[40]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.5, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[41]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.5, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[42]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.5, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[43]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.5, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[44]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.5, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[45]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.5, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[46]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.5, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[47]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.5, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[48]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.5, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column6(self,list):
+        column1_label = Label(self.__interface_frame,text="Friday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.625, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[49]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.625, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[50]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.625, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[51]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.625, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[52]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.625, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[53]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.625, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[54]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.625, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[55]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.625, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[56]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.625, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[57]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.625, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[58]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.625, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[59]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.625, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[60]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.625, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column7(self,list):
+        column1_label = Label(self.__interface_frame,text="Saturday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.75, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[61]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.75, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[62]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.75, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[63]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.75, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[64]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.75, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[65]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.75, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[66]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.75, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[67]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.75, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[68]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.75, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[69]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.75, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[70]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.75, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[71]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.75, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[72]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.75, rely=0.923, relheight=0.077, relwidth=0.125)
+
+    def __column8(self,list):
+        column1_label = Label(self.__interface_frame,text="Sunday",bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column1_label.place(relx=0.875, rely=0, relheight=0.076, relwidth=0.125)
+
+        column2_label = Label(self.__interface_frame,text=list[73]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column2_label.place(relx=0.875, rely=0.076, relheight=0.077, relwidth=0.125)
+
+        column3_label = Label(self.__interface_frame,text=list[74]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column3_label.place(relx=0.875, rely=0.153, relheight=0.077, relwidth=0.125)
+
+        column4_label = Label(self.__interface_frame, text=list[75]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column4_label.place(relx=0.875, rely=0.23, relheight=0.077, relwidth=0.125)
+
+        column5_label = Label(self.__interface_frame, text=list[76]["Lecturer"],bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column5_label.place(relx=0.875, rely=0.307, relheight=0.077, relwidth=0.125)
+
+        column6_label = Label(self.__interface_frame,text=list[77]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column6_label.place(relx=0.875, rely=0.384, relheight=0.077, relwidth=0.125)
+
+        column7_label = Label(self.__interface_frame,text=list[78]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column7_label.place(relx=0.875, rely=0.461, relheight=0.077, relwidth=0.125)
+
+        column8_label = Label(self.__interface_frame,text=list[79]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE, font=("time new roman",12))
+        column8_label.place(relx=0.875, rely=0.538, relheight=0.077, relwidth=0.125)
+
+        column9_label = Label(self.__interface_frame, text=list[80]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column9_label.place(relx=0.875, rely=0.615, relheight=0.077, relwidth=0.125)
+
+        column10_label = Label(self.__interface_frame, text=list[81]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column10_label.place(relx=0.875, rely=0.692, relheight=0.077, relwidth=0.125)
+
+        column11_label = Label(self.__interface_frame, text=list[82]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column11_label.place(relx=0.875, rely=0.769, relheight=0.077, relwidth=0.125)
+
+        column12_label = Label(self.__interface_frame, text=list[83]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column12_label.place(relx=0.875, rely=0.846, relheight=0.077, relwidth=0.125)
+
+        column13_label = Label(self.__interface_frame, text=list[84]["Lecturer"], bg='#ffffff', bd=4, relief=RIDGE,font=("time new roman", 12))
+        column13_label.place(relx=0.875, rely=0.923, relheight=0.077, relwidth=0.125)
+
+#-------------------------------------------------------------------------------------------------------
+class BookRoom:
+    def __init__(self,master, name_room):
+        self.__master=master
+        self.__name_room=name_room
+        self.__room= Room()
+    def mainMenu(self):
+        self.add_users_frame=Frame(self.__master, bg='#ffffff')
+        self.add_users_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+        self.__nameLecturer()
+        self.__course()
+        self.__date()
+        self.__lesson_start()
+        self.__lesson_end()
+        self.__backButton()
+        self.__submitButton()
+
+    def __backButton(self):
+        self.__back_button= Button(self.__master, text="Back",  command= self.__back, bd=4,font=("time new roman", 12, 'bold'), fg ='#ffffff', bg ='#00b386')
+        self.__back_button.config(relief=RAISED)
+        self.__back_button.place(relx=0.3, rely=0.86, relheight=0.1, relwidth=0.2)
+
+    def __back(self):
+        schedule= ScheduleLab(self.__master)
+        schedule.mainMenu()
+
+    def __submitButton(self):
+        self.__submit_button = Button(self.__master, text="Submit",  command=self.__submit, bd=4,font=("time new roman", 12,'bold'), fg ='#ffffff', bg ='#00b386')
+        self.__submit_button.config(relief=RAISED)
+        self.__submit_button.place(relx=0.5, rely=0.86, relheight=0.1, relwidth=0.2)
+    def __submit(self):
+        result=messagebox.askyesno("Book room","Are you sure?")
+        if result==1:
+            name= self.__entry_name.get()
+            date=self.__entry_date.get()
+            course=self.__entry_course.get()
+            start=self.__entry_lesson_start.get()
+            end=self.__entry_lesson_end.get()
+            self.__room.add(self.__name_room, name,course,date,start,end)
+
+    def __nameLecturer(self):
+        self.__label_name= Label(self.__master, text ="Name Lecturer:",font=("times new roman", 14),anchor= 'w', bg= '#ffffff')
+        self.__label_name.place(relx=0.25, rely=0.1, relheight=0.05, relwidth=0.2)
+
+        self.__entry_name= Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5, relief =RIDGE)
+        self.__entry_name.place(relx=0.25, rely=0.15, relwidth=0.5, relheight=0.05)
+
+    def __course(self):
+        self.__label_course = Label(self.__master, text="Course:", font=("times new roman", 14), anchor= 'w',bg= '#ffffff')
+        self.__label_course.place(relx=0.25, rely=0.2, relheight=0.05, relwidth=0.1)
+
+        self.__entry_course = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
+        self.__entry_course.place(relx=0.25, rely=0.25, relwidth=0.5, relheight=0.05)
+
+    def __date(self):
+        self.__label_date = Label(self.__master, text="Date (dd-mm-yy):", font=("times new roman", 14),anchor= 'w',bg= '#ffffff')
+        self.__label_date.place(relx=0.25, rely=0.3, relheight=0.05, relwidth=0.2)
+
+        self.__entry_date = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
+        self.__entry_date.place(relx=0.25, rely=0.35, relwidth=0.5, relheight=0.05)
+
+    def __lesson_start(self):
+        self.__label_lesson_start = Label(self.__master, text="Lesson Begin: ", font=("times new roman", 14),anchor= 'w',bg= '#ffffff')
+        self.__label_lesson_start.place(relx=0.25, rely=0.4, relheight=0.05, relwidth=0.2)
+
+        self.__entry_lesson_start = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5, relief =RIDGE)
+        self.__entry_lesson_start.place(relx=0.25, rely=0.45, relwidth=0.5, relheight=0.05)
 
 
+
+    def __lesson_end(self):
+        self.__label_lesson_end = Label(self.__master, text="Lesson End:", font=("times new roman", 14), anchor= 'w',bg= '#ffffff')
+        self.__label_lesson_end.place(relx=0.25, rely=0.5, relheight=0.05, relwidth=0.1)
+
+        self.__entry_lesson_end = Entry(self.__master,bg ='#f2f2f2', borderwidth=1.5,relief =RIDGE)
+        self.__entry_lesson_end.place(relx=0.25, rely=0.55, relwidth=0.5, relheight=0.05)
+#-------------------------------------------------------------------------------------------------------
+class addRoom:
+    def __init__(self, master, master_controlDevices):
+        self.__master = master
+        self.__room_list=RoomList()
+        self.__masterControlDevices=master_controlDevices
+        canvas = Canvas(self.__master, height=250, width=300)
+        canvas.pack()
+
+    def mainMenu(self):
+        self.__nameRoom()
+        self.__submitButton()
+        self.__backButton()
+
+
+
+    def __nameRoom(self):
+        self.__label_name = Label(self.__master, text="Name Room: ", font=("times new roman", 12), anchor='w',bg='#ffffff')
+        self.__label_name.place(relx=0.35, rely=0.25, relheight=0.1, relwidth=0.3)
+
+        self.__entry_name = Entry(self.__master, bg='#f2f2f2', borderwidth=1.5, relief=RIDGE)
+        self.__entry_name.place(relx=0.2, rely=0.4, relwidth=0.6, relheight=0.1)
+
+
+    def __backButton(self):
+        self.__back_button = Button(self.__master, text="Back", command=self.__closeAddRoom, bd=4,font=("time new roman", 10, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__back_button.config(relief=RAISED)
+        self.__back_button.place(relx=0.5, rely=0.75, relheight=0.15, relwidth=0.25)
+
+    def __submitButton(self):
+        self.__submit_button = Button(self.__master, text="Submit", command=self.__submit, bd=4,font=("time new roman", 10, 'bold'), fg='#ffffff', bg='#00b386')
+        self.__submit_button.config(relief=RAISED)
+        self.__submit_button.place(relx=0.25, rely=0.75, relheight=0.15, relwidth=0.25)
+
+    def __submit(self):
+        result=messagebox.askyesno("Add Room", "Are you sure?")
+        if result==1:self.__submitConfirm()
+
+
+    def __submitConfirm(self):
+        self.__string_name = self.__entry_name.get()
+        check_name=self.__checkVaildName()
+        if check_name==0:
+            self.__room_list.addRoom(self.__string_name)
+            messagebox.showinfo("Add New Devices","Successfully!")
+            scheduleLab=ScheduleLab(self.__masterControlDevices)
+            scheduleLab.mainMenu()
+            self.__closeAddRoom()
+        else:
+            messagebox.showwarning("Add New Devices","Invalid Name")
+            self.__closeAddDevicesWin()
+
+    def __closeAddRoom(self):
+        self.__master.destroy()
+
+
+    def __checkVaildName(self):
+        return self.__room_list.checkExistRoom(self.__string_name)
+
+#-------------------------------------------------------------------------------------------------------
 class ControlDevices:
     def __init__(self, master):
         self.__master=master
