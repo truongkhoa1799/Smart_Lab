@@ -144,7 +144,6 @@ class Room:
             list.append("")
             index=self.__list["Classes"][Room][i]
             if index in self.__list["Course detail"][Room]:
-                print(index)
                 list[count]=self.__list["Course detail"][Room][index]
             else:
                 temp={}
