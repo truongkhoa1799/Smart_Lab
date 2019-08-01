@@ -64,7 +64,6 @@ class Data:
 
 
     def deleteUser(self, infor):
-        self.__no_users= self.__no_users-1
         account= AccountStatus()
         account.Deactive(infor)
 

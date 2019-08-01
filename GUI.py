@@ -10,7 +10,7 @@ from multiprocessing import Process
 from firebaseAPI import MyFirebase
 from AccountStatus import AccountStatus
 
-from CommunicateArduino import SendToArduino
+#from CommunicateArduino import SendToArduino
 
 
 LENGTH_OF_PIN =4
@@ -323,12 +323,12 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
-            #check = 1
+            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
+            check = 1
             if check==1:
                 #if check == 1 do else print fail
-                uid=communicate.getUID()
-                #uid="82 BB 44 96"
+                #uid=communicate.getUID()
+                uid="82 BB 44 96"
                 #print(uid)
                 #send infor to arduino to get RFID UID
                 list = {}
@@ -777,6 +777,31 @@ class ScheduleLab:
     def mainMenu(self):
         self.__main_frame = Frame(self.__master, bg='#ffffff')
         self.__main_frame.place(relx=0, rely=0, relheight=1, relwidth=1)
+    def __scrollFrame(self):
+        self.__showTag=Label(self.__master,text="STT  Name                 Amount       Current", font =("time new roman", 12), bg='#ffffff', anchor='w')
+        self.__showTag.place(relx=0, rely=0, relheight=0.1, relwidth=0.9)
+        #----------------------------------------------------------------
+        self.__scroll_frame = Frame(self.__master, bg='#ebebe0')
+        self.__scroll_frame.place(relx=0, rely=0.1, relheight=0.7, relwidth=1)
+
+        self.__scroll_barY= Scrollbar(self.__scroll_frame, orient=VERTICAL)
+        self.__scroll_barY.pack(side=RIGHT, fill=Y)
+
+        self.__scroll_barX = Scrollbar(self.__scroll_frame, orient=HORIZONTAL)
+        self.__scroll_barX.pack(side=BOTTOM, fill=X)
+
+        self.__list_box=Listbox(self.__scroll_frame,yscrollcommand = self.__scroll_barY.set, xscrollcommand= self.__scroll_barX.set)
+        devices=Devices()
+        list=devices.getList()
+        count=0
+        for i in list:
+
+            self.__list_box.insert(END, infor)
+        self.__list_box.place(relx=0, rely=0, relheight=0.92, relwidth=0.95)
+        # ----------------------------------------------------------------
+        self.__scroll_barY.config(command= self.__list_box.yview)
+        self.__scroll_barX.config(command=self.__list_box.xview)
+
         
 #-------------------------------------------------------------------------------------------------------
 
@@ -1166,10 +1191,11 @@ class BorrowedEquipments:
     def __borrowDevices(self):
         askUID=messagebox.askyesno("Ask UID","Please insert your card")
         if askUID==1:
-            check=communicate.sendRequestUID()
+            check =1
+            #check=communicate.sendRequestUID()
             if check ==1:
-                uid=communicate.getUID()
-                #uid="82 BB 44 96"
+                #uid=communicate.getUID()
+                uid="82 BB 44 96"
                 id=data.getIDWithRFID_UID(uid)
                 if id!=0:
                     cursor= self.__list_box.curselection()
@@ -1237,10 +1263,11 @@ class ReturnBorrowedDevicesWindow:
 
     def __insertCardReturn(self):
         # ask UID
-        check=communicate.sendRequestUID()
+        check = 1
+        #check=communicate.sendRequestUID()
         if check ==1:
-            uid=communicate.getUID()
-            #uid="82 BB 44 96"
+            #uid=communicate.getUID()
+            uid="82 BB 44 96"
             id= data.getIDWithRFID_UID(uid)
             list = self.__bdl.getInforWithNameAndID(self.__name, id)
             if list!=0:
@@ -1472,7 +1499,7 @@ data = Data()
 database = Data()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-communicate= SendToArduino("0")
+#communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -1480,19 +1507,19 @@ SignInScreen.SignInScreen()
 def loopGUI():
     root.mainloop()
 
-def Receive():
-    while TRUE:
-        dataForDoor=Data()
-        rfid_uid=communicate.receiveInfor()
-        if rfid_uid!="b''" and dataForDoor.checkRFID_UID(rfid_uid)==1:
-            communicate.Print()
-        else: print("invalid")
-    time.sleep(1)
+# def Receive():
+#     while TRUE:
+#         dataForDoor=Data()
+#         rfid_uid=communicate.receiveInfor()
+#         if rfid_uid!="b''" and dataForDoor.checkRFID_UID(rfid_uid)==1:
+#             communicate.Print()
+#         else: print("invalid")
+#     time.sleep(1)
 
 
 if __name__=="__main__":
-    p1 = Process(target=Receive)
-    p1.start()
+    # p1 = Process(target=Receive)
+    # p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 

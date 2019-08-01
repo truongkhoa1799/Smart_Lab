@@ -2,6 +2,71 @@ import pyrebase
 import time
 from datetime import datetime
 
+labScheduleList = {
+    "Classes": {
+        "C5_202": [0] * 4032,
+        "C6_101": [0] * 4032
+    },
+    "Courses detail": {
+        "C5_202": "null",
+        "C6_101": "null"
+    }
+}
+
+
+labStatusList = {
+    "C5_202": {
+        "Room": "C5_202",
+        "Status": "Closed"
+    },
+    "C6_101": {
+        "Room": "C6_101",
+        "Status": "Opened"
+    },
+}
+
+userList = {
+    1710364: {
+        "Name": "Ngo Duc Tuan",
+        "Gender": "male",
+        "ID number": 1710364,
+        "Email": "tuan.ngo1999@hcmut.edu.vn",
+        "password": 12345678,
+        "UID": "1n3ud914d12e1",
+        "RFID UID": "00 c2 02 13",
+    }
+}
+
+deviceList = {
+    "Esp8266": {
+        "Name": "Esp8266",
+        "Total": 20,
+        "Remained": 10
+    },
+    "Arduino R3": {
+        "Name": "Arduino R3",
+        "Total": 10,
+        "Remained": 10
+    }
+}
+
+loginHistoryList = {
+    "c5_202": [
+        {
+            "Time": "1564485226",
+            "Type": 1710364
+        },
+        {
+            "Time": "1564485229",
+            "Type": "Admin"
+        }
+    ],
+    "c6_101": [
+
+    ]
+
+}
+
 def encodeString(email):
     return email.replace('.', ',')
 
@@ -26,15 +91,16 @@ class MyFirebase:
             self.checkAdmin = True
             self.refDB = self.firebase.database()
             self.__admin_info = self.auth.get_account_info(self.admin['idToken'])
-            self.__pushLoginHistory("Admin")
+            self.__pushLoginHistory("Admin", "C5_202")
             print("Successful to authenticate to Firebase as Admin")
-        except:
+        except Exception as e:
             print("Failed to authenticate to Firebase as Admin")
+            print(e)
 
     def formatFirebase(self):
         return True
 
-    def addUser(self, userData):
+    def addUser(self, userData, isAdmin = False):
         if self.checkAdmin is False:
             print("Add user failed")
             return False, None
@@ -43,7 +109,11 @@ class MyFirebase:
             uid = self.auth.get_account_info(newUser['idToken'])['users'][0]['localId']
             userData['UID'] = uid
             self.refDB.child("List of users").child(userData['ID number']).set(userData, self.admin['idToken'])
-            self.refDB.child("Allowed UIDs").child(userData['UID']).set({"Status": 'true'}, self.admin['idToken'])
+            self.refDB.child("Allowed UIDs").child(userData['UID']).set({"Status": 'true', "ID number": str(userData['ID number'])}, self.admin['idToken'])
+            if isAdmin == True:
+                self.refDB.child("Admin Key").child(uid).set("true", self.admin['idToken'])
+                print("Add admin successful")
+                return True, userData
             print("Add user successful")
             return True, userData
         except:
@@ -85,7 +155,7 @@ class MyFirebase:
             self.refDB.child("Allowed UIDs").remove(self.admin['idToken'])
             for user in userList:
                 self.refDB.child("List of users").child(str(user)).set(userList[user], self.admin['idToken'])
-                self.refDB.child("Allowed UIDs").child(userList[user]['UID']).set({"Status": 'true'}, self.admin['idToken'])
+                self.refDB.child("Allowed UIDs").child(userList[user]['UID']).set({"Status": 'true', "ID number": str(user)}, self.admin['idToken'])
             print("Update user list successful")
             return True
         except:
@@ -201,22 +271,107 @@ class MyFirebase:
             print("Get device list failed")
             return False, None
 
-    def __pushLoginHistory(self, type):
-        self.refDB.child("Login history").push({'Time': time.time().__round__(), 'Type': str(type)}, self.admin['idToken'])
+    def addCourseToLabSchedule(self, courseDetail):
+        if self.checkAdmin is False:
+            print("Add course to lab schedule list failed")
+            return False
+        try:
+            i = int(courseDetail["Reference"]) + int(courseDetail["Start"])
+            key = i
+            while i <= int(courseDetail["Reference"]) + int(courseDetail["End"]):
+                self.refDB.child("Lab schedule").child("Classes").child(courseDetail["Room"]).child(str(i)).set(str(key), self.admin['idToken'])
+                i += 1
+            self.refDB.child("Lab schedule").child("Courses detail").child(courseDetail["Room"]).child(str(key)).set(courseDetail, self.admin['idToken'])
+            print("Add course to lab schedule list successful")
+            return True
+        except:
+            print("Add course to lab schedule list failed")
+            return False
 
-    def addLoginHistory(self, ID_number):
+    def updateSheduleLabList(self, labScheduleList):
+        if self.checkAdmin is False:
+            print("Update lab schedule list failed")
+            return False
+        try:
+            self.refDB.child("Lab schedule").child("Courses detail").set(labScheduleList["Courses detail"], self.admin['idToken'])
+            self.refDB.child("Lab schedule").child("Classes").set(labScheduleList["Classes"], self.admin['idToken'])
+            print("Update lab schedule list successful")
+            return True
+        except Exception as e:
+            print("Update lab schedule list failed")
+            print(e)
+            return False
+
+    def getSheduleLabList(self):
+        if self.checkAdmin is False:
+            print("Get lab schedule list failed")
+            return False, None
+        try:
+            scheduleLabList = {}
+            temp_data = self.refDB.child("Lab schedule").get(self.admin['idToken'])
+            scheduleLabList = temp_data.val()
+            print("Get device list successful")
+            return True, scheduleLabList
+        except:
+            print("Get device list failed")
+            return False, None
+
+    def refreshToken(self):
+        self.admin = self.auth.refresh(self.admin['refreshToken'])
+
+
+    def __pushLoginHistory(self, type, room):
+        self.refDB.child("Login history").child(room).push({'Time': time.time().__round__(), 'Type': str(type)}, self.admin['idToken'])
+
+    def addLoginHistory(self, ID_number, room):
         if self.checkAdmin is False:
             print("Add login history failed")
             return False
+        if room not in labStatusList:
+            print("Room does not exist")
+            return False
         try:
-            self.__pushLoginHistory(ID_number)
+            self.__pushLoginHistory(ID_number, room)
             print("Add login history successful")
             return True
         except:
             print("Add login history failed")
             return False
 
+
+
+# mycourse2 = {
+#     "Lecturer": "Pham Hoang Anh",
+#     "Course": "Fundamental programming",
+#     "Start": 7,
+#     "End": 9,
+#     "Reference": 24,
+#     "Room": "C5_202",
+#     "Date": "31/12/2019"
+# }
 # myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+# myfirebase.addCourseToLabSchedule(mycourse2)
+# check, tempList = myfirebase.getSheduleLabList()
+# print(tempList["Classes"])
+
+# mydict = {}
+# mylist = [0,4,1,13,5]
+# for idx, val in enumerate(mylist):
+#     mydict[idx] = str(val)
+# print(mydict)
+#print(labScheduleList["Classes"]["C5_202"])
+#print(labScheduleList["Courses detail"])
+# for x in labScheduleList["Classes"]["C5_202"]:
+#     print(str(x))
+# myfirebase.addUser({
+#         "Name": "Ngo Tuan",
+#         "Gender": "male",
+#         "ID number": 1710333,
+#         "Email": "ngotuan@hcmut.edu.vn",
+#         "password": "12345678",
+#         "RFID UID": "00 c2 02 19",
+#         "PIN": 1234
+#     }, True)
 # myfirebase.updateUserList({
 #     1710321: {
 #         "Name": "Ngo Duc Tuan",
@@ -247,15 +402,5 @@ class MyFirebase:
 #         "Remained": 10
 #     }
 # })
-# myfirebase.addUser({
-#         "Name": "Ngo Duc Tuan",
-#         "Gender": "male",
-#         "ID number": 1710364,
-#         "Email": "tuan.ngo1999@hcmut.edu.vn",
-#         "password": "12345678",
-#         "RFID UID": "00 c2 02 13"
-#     })
 
-#myfirebase.addLoginHistory(1710364)
-#check, deviceList = myfirebase.getDeviceList()
-# myfire= MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+
