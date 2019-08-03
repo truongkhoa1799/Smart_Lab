@@ -8,8 +8,28 @@ labScheduleList = {
         "C6_101": [0] * 4032
     },
     "Courses detail": {
-        "C5_202": "null",
-        "C6_101": "null"
+        "C5_202": {
+            "31": {
+                "Lecturer": "Pham Hoang Anh",
+                "Course": "Fundamental programming",
+                "Start": 7,
+                "End": 9,
+                "Reference": 24,
+                "Room": "C5_202",
+                "Date": "31/12/2019"
+            }
+        },
+        "C6_101": {
+            "31": {
+                "Lecturer": "Pham Hoang Anh",
+                "Course": "Fundamental programming",
+                "Start": 7,
+                "End": 9,
+                "Reference": 24,
+                "Room": "C6_101",
+                "Date": "31/12/2019"
+            }
+        }
     }
 }
 
@@ -29,9 +49,8 @@ userList = {
     1710364: {
         "Name": "Ngo Duc Tuan",
         "Gender": "male",
-        "ID number": 1710364,
+        "ID number": "1710364",
         "Email": "tuan.ngo1999@hcmut.edu.vn",
-        "password": 12345678,
         "UID": "1n3ud914d12e1",
         "RFID UID": "00 c2 02 13",
     }
@@ -51,7 +70,7 @@ deviceList = {
 }
 
 loginHistoryList = {
-    "c5_202": [
+    "C5_202": [
         {
             "Time": "1564485226",
             "Type": 1710364
@@ -61,7 +80,7 @@ loginHistoryList = {
             "Type": "Admin"
         }
     ],
-    "c6_101": [
+    "C6_101": [
 
     ]
 
@@ -105,9 +124,11 @@ class MyFirebase:
             print("Add user failed")
             return False, None
         try:
-            newUser = self.auth.create_user_with_email_and_password(userData['Email'], userData['password'])
+            newUser = self.auth.create_user_with_email_and_password(userData['Email'], userData['Password'])
             uid = self.auth.get_account_info(newUser['idToken'])['users'][0]['localId']
             userData['UID'] = uid
+            if "Password" in userData:
+                del userData["Password"]
             self.refDB.child("List of users").child(userData['ID number']).set(userData, self.admin['idToken'])
             self.refDB.child("Allowed UIDs").child(userData['UID']).set({"Status": 'true', "ID number": str(userData['ID number'])}, self.admin['idToken'])
             if isAdmin == True:
@@ -116,8 +137,9 @@ class MyFirebase:
                 return True, userData
             print("Add user successful")
             return True, userData
-        except:
+        except Exception as e:
             print("Add user failed")
+            print(e)
             return False, None
 
     def activateUser(self, UID):
@@ -129,8 +151,9 @@ class MyFirebase:
                 self.refDB.child("Allowed UIDs").child(UID).set({"Status": 'true'}, self.admin['idToken'])
                 print("Activate user successful")
                 return True
-            except:
+            except Exception as e:
                 print("Activate user failed")
+                print(e)
                 return False
 
     def deactivateUser(self, UID):
@@ -142,8 +165,9 @@ class MyFirebase:
                 self.refDB.child("Allowed UIDs").child(UID).set({"Status": 'false'}, self.admin['idToken'])
                 print("Deactivate user successful")
                 return True
-            except:
+            except Exception as e:
                 print("Deactivate user failed")
+                print(e)
                 return False
 
     def updateUserList(self, userList):
@@ -158,8 +182,9 @@ class MyFirebase:
                 self.refDB.child("Allowed UIDs").child(userList[user]['UID']).set({"Status": 'true', "ID number": str(user)}, self.admin['idToken'])
             print("Update user list successful")
             return True
-        except:
+        except Exception as e:
             print("Update user list failed")
+            print(e)
             return False
 
     def getUserList(self):
@@ -173,8 +198,9 @@ class MyFirebase:
                 userList[user.key()] = user.val()
             print("Get user list successful")
             return True, userList
-        except:
+        except Exception as e:
             print("Get user list failed")
+            print(e)
             return False, None
 
     def updateLabStatus(self, labData):
@@ -185,8 +211,9 @@ class MyFirebase:
             self.refDB.child("Lab status").child(labData["Name"]).update({'Status': labData["Status"]}, self.admin['idToken'])
             print("Update lab status successful")
             return True
-        except:
+        except Exception as e:
             print("Update lab status failed")
+            print(e)
             return False
 
     def updateLabStatusList(self, labStatusList):
@@ -194,16 +221,17 @@ class MyFirebase:
             print("Update lab status list failed")
             return False
         try:
-            self.refDB.child("Lab status").remove()
+            self.refDB.child("Lab status").remove(self.admin['idToken'])
             for lab in labStatusList:
                 self.refDB.child("Lab status").child(lab).set(labStatusList[lab], self.admin['idToken'])
             print("Update lab status list successful")
             return True
-        except:
+        except Exception as e:
             print("Update lab status list failed")
+            print(e)
             return False
 
-    def getLabStatus(self):
+    def getLabStatusList(self):
         if self.checkAdmin is False:
             print("Get lab status list failed")
             return False, None
@@ -214,8 +242,9 @@ class MyFirebase:
                 labstatusList[user.key()] = user.val()
             print("Get lab status successful")
             return True, labstatusList
-        except:
+        except Exception as e:
             print("Get lab status failed")
+            print(e)
             return False, None
 
     def addDevice(self, deviceData):
@@ -226,8 +255,9 @@ class MyFirebase:
             self.refDB.child("List of devices").child(deviceData["Name"]).set(deviceData, self.admin['idToken'])
             print("Add device successful")
             return True
-        except:
+        except Exception as e:
             print("Add device failed")
+            print(e)
             return False
 
     def updateDevice(self, deviceData):
@@ -238,8 +268,9 @@ class MyFirebase:
             self.refDB.child("List of devices").child(deviceData["Name"]).update(deviceData, self.admin['idToken'])
             print("Update device successful")
             return True
-        except:
+        except Exception as e:
             print("Update device failed")
+            print(e)
             return False
 
     def updateDeviceList(self, deviceList):
@@ -252,8 +283,9 @@ class MyFirebase:
                 self.refDB.child("List of devices").child(device).set(deviceList[device], self.admin['idToken'])
             print("Update device list successful")
             return True
-        except:
+        except Exception as e:
             print("Update device list failed")
+            print(e)
             return False
 
     def getDeviceList(self):
@@ -267,8 +299,9 @@ class MyFirebase:
                 deviceList[user.key()] = user.val()
             print("Get device list successful")
             return True, deviceList
-        except:
+        except Exception as e:
             print("Get device list failed")
+            print(e)
             return False, None
 
     def addCourseToLabSchedule(self, courseDetail):
@@ -284,8 +317,9 @@ class MyFirebase:
             self.refDB.child("Lab schedule").child("Courses detail").child(courseDetail["Room"]).child(str(key)).set(courseDetail, self.admin['idToken'])
             print("Add course to lab schedule list successful")
             return True
-        except:
+        except Exception as e:
             print("Add course to lab schedule list failed")
+            print(e)
             return False
 
     def updateSheduleLabList(self, labScheduleList):
@@ -312,8 +346,9 @@ class MyFirebase:
             scheduleLabList = temp_data.val()
             print("Get device list successful")
             return True, scheduleLabList
-        except:
+        except Exception as e:
             print("Get device list failed")
+            print(e)
             return False, None
 
     def refreshToken(self):
@@ -334,22 +369,26 @@ class MyFirebase:
             self.__pushLoginHistory(ID_number, room)
             print("Add login history successful")
             return True
-        except:
+        except Exception as e:
             print("Add login history failed")
+            print(e)
             return False
 
 
 
-# mycourse2 = {
-#     "Lecturer": "Pham Hoang Anh",
-#     "Course": "Fundamental programming",
-#     "Start": 7,
-#     "End": 9,
-#     "Reference": 24,
-#     "Room": "C5_202",
-#     "Date": "31/12/2019"
-# }
 # myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+# myfirebase.addUser({
+#         "Name": "Ngo Duc Tuan",
+#         "Gender": "Male",
+#         "ID number": "1710364",
+#         "Email": "ngotuan@gmail.com",
+#         "Password": "12345678",
+#         "RFID UID": "00 c2 02 19",
+#         "PIN": 1234
+#     }, True)
+#myfirebase.updateLabStatusList(labStatusList)
+#myfirebase.updateDeviceList(deviceList)
+#myfirebase.updateSheduleLabList(labScheduleList)
 # myfirebase.addCourseToLabSchedule(mycourse2)
 # check, tempList = myfirebase.getSheduleLabList()
 # print(tempList["Classes"])
@@ -364,13 +403,13 @@ class MyFirebase:
 # for x in labScheduleList["Classes"]["C5_202"]:
 #     print(str(x))
 # myfirebase.addUser({
-#         "Name": "Ngo Tuan",
-#         "Gender": "male",
-#         "ID number": 1710333,
+#         "Name": "Ngo Duc Tuan",
+#         "Gender": "Male",
+#         "ID number": "1710333",
 #         "Email": "ngotuan@hcmut.edu.vn",
 #         "password": "12345678",
 #         "RFID UID": "00 c2 02 19",
-#         "PIN": 1234
+#         "PIN": "1234"
 #     }, True)
 # myfirebase.updateUserList({
 #     1710321: {
