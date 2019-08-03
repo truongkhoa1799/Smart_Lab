@@ -31,15 +31,22 @@ class Room:
             if room not in self.__list["Classes"]:
                 self.__list["Classes"][room]=[0]*4033
                 self.__list["Course detail"][room]={}
-            reference = self.__determineIndex(int(start), int(day), int(month), int(year))
-            list["Reference"]=reference
+            firstIndex = self.__determineIndex(int(start), int(day), int(month), int(year))
+            list["Reference"]=self.__getReference(int(day), int(month), int(year))
             #print(list)
             for i in range(int(start), int(end)+1,1):
                 index = self.__determineIndex(i, int(day), int(month), int(year))
-                self.__list["Classes"][room][index]=reference
-            self.__list["Course detail"][room][reference]=list
+                self.__list["Classes"][room][index]=firstIndex
+            self.__list["Course detail"][room][firstIndex]=list
         file.close()
 
+    def __getReference(self, day, month, year):
+        now = datetime(year=year, month=month, day=day, hour=6)
+        timeStampNow = datetime.timestamp(now)
+        diff = timeStampNow - timeStampRoot
+        days = math.floor(diff / 86400)
+        print(days*12)
+        return days*12
     def __changeDate(self, string):
         string=string+"-"
         count=0
@@ -96,24 +103,24 @@ class Room:
             self.__list["Classes"][room]=[0]*4033
             self.__list["Course detail"][room] = {}
 
-        if self.__list["Classes"][room][index]!=1:
-            list={}
+        list = {}
+        if self.__list["Classes"][room][index]==0:
             list["Lecturer"] = lecturer
             list["Course"] = course
             list["Start"] = start
             list["End"] = end
             list["Room"] = room
             list["Date"] = date
-            reference = self.__determineIndex(int(start), int(day), int(month), int(year))
-            list["Reference"] = reference
+            firstIndex = self.__determineIndex(int(start), int(day), int(month), int(year))
+            list["Reference"] = self.__getReference(int(day), int(month), int(year))
             # print(list)
             for i in range(int(start), int(end) + 1, 1):
                 index = self.__determineIndex(i, int(day), int(month), int(year))
-                self.__list["Classes"][room][index] = reference
-            self.__list["Course detail"][room][reference] = list
+                self.__list["Classes"][room][index] = firstIndex
+            self.__list["Course detail"][room][firstIndex] = list
             self.__writeBack()
-            return 1
-        else: return 0
+            return 1, list
+        else: return 0,list # exist lesson
 
 
     def __changeToWeek(self,day, month, year):
@@ -166,8 +173,8 @@ class Room:
 
 
 # room= Room()
-# print(room.getDetailOfWeek(21,8,2019))
-# print(room.add("C5_202","Thien","Programming","02-08-2019","4","6"))
+# # # print(room.getDetailOfWeek(21,8,2019))
+# print(room.add("C5_202","Thien","Programming","02-08-2019","1","3"))
 # print(room.getList())
 
 

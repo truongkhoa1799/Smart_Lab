@@ -1275,7 +1275,13 @@ class BookRoom:
             course=self.__entry_course.get()
             start=self.__entry_lesson_start.get()
             end=self.__entry_lesson_end.get()
-            self.__room.add(self.__name_room, name,course,date,start,end)
+            check, list =self.__room.add(self.__name_room, name,course,date,start,end)
+            if check==1:
+                check1=database.addCourseToLabSchedule(list)
+                if check1==TRUE:
+                    messagebox.showinfo("Book Room","Successfully!")
+                else:messagebox.showinfo("Book Room","Exist lesson.")
+            else: messagebox.showinfo("Book Room","Exist lesson.")
 
     def __nameLecturer(self):
         self.__label_name= Label(self.__master, text ="Name Lecturer:",font=("times new roman", 14),anchor= 'w', bg= '#ffffff')
