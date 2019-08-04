@@ -3,7 +3,7 @@ class Data:
     def __init__(self):
         self.__list={}    # save the main infor
         self.__no_users=0
-        self.__arrayKey=["Name","Gender","ID number","Email","UID","RFID UID", "PIN", "password"]
+        self.__arrayKey=["Name","Gender","ID number","Email","UID","RFID UID", "PIN"]
         file=open("data.txt", "r")
         #load the infor from file to list
         f1=file.readlines()
@@ -83,7 +83,7 @@ class Data:
         file = open("data.txt", "w")
         file.write("")
         for i in self.__list:
-            str=self.__list[i].get("Name")+"|"+self.__list[i].get("Gender")+"|"+self.__list[i].get("ID number")+"|"+self.__list[i].get("Email")+"|"+self.__list[i].get("UID")+"|"+self.__list[i].get("RFID UID")+"|"+self.__list[i].get("PIN")+"|"+self.__list[i].get("password")+"|"+"\n"
+            str=self.__list[i].get("Name")+"|"+self.__list[i].get("Gender")+"|"+self.__list[i].get("ID number")+"|"+self.__list[i].get("Email")+"|"+self.__list[i].get("UID")+"|"+self.__list[i].get("RFID UID")+"|"+self.__list[i].get("PIN")+"|"+"\n"
             file.write(str)
         file.close()
 

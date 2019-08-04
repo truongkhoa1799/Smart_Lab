@@ -12,7 +12,7 @@ from AccountStatus import AccountStatus
 from RoomList import RoomList
 from Room import Room
 
-#from CommunicateArduino import SendToArduino
+from CommunicateArduino import SendToArduino
 
 
 LENGTH_OF_PIN =4
@@ -325,13 +325,13 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_pin)
-            check = 1
+            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_ID)
+            #check = 1
             if check==1:
                 #if check == 1 do else print fail
-                #uid=communicate.getUID()
-                uid="82 BB 44 96"
-                #print(uid)
+                uid=communicate.getUID()
+                #uid="82 BB 44 96"
+                print(uid)
                 #send infor to arduino to get RFID UID
                 list = {}
                 list["Name"] = self.__string_name
@@ -340,7 +340,7 @@ class AddUser:
                 list["Email"] = self.__string_email
                 list["RFID UID"] = uid
                 list["PIN"] = self.__string_pin
-                list["password"] = self.__string_pw
+                list["Password"] = self.__string_pw
                 # send this list to FireBase
                 # and receive new list
                 print(list)
@@ -616,7 +616,7 @@ class DeleteUser:
         self.submit_button.place(relx=0.5, rely=0.85, relheight=0.1, relwidth=0.2)
 
     def __scrollFrame(self):
-        self.__showTag=Label(self.__master,text="STT     SID     RFID UID                Name                              Email                                           UID                                         PIN           Password", font =("time new roman", 12), bg='#ffffff', anchor='w')
+        self.__showTag=Label(self.__master,text="STT     SID     RFID UID                Name                              Email                                           UID                                         PIN           ", font =("time new roman", 12), bg='#ffffff', anchor='w')
         self.__showTag.place(relx=0, rely=0, relheight=0.1, relwidth=0.9)
         #----------------------------------------------------------------
         self.__scroll_frame = Frame(self.__master, bg='#ebebe0')
@@ -638,12 +638,11 @@ class DeleteUser:
                 RFID_UID = list[i].get("RFID UID")
                 email = list[i].get("Email")
                 PIN = list[i].get("PIN")
-                password = list[i].get("password")
                 self.__arrayList.append("")
                 s=[ID,UID]
                 self.__arrayList[count] =s
                 count += 1
-                infor=" "+str(count) + (" "*(6-len(str(count))))+":     "+ID+"  :  "+RFID_UID+("  "*(16-len(RFID_UID)))+":"+("  "*3)+name +("  "*(24-len(name)))+":"+("  "*4)+email + ("  "*(30-len(email)))+":"+("  "*4)+ UID + ("  "*(20-len(UID)))+":"+("  "*3)+ PIN + ("  "*(9-len(PIN)))+":"+("  "*4)+ password
+                infor=" "+str(count) + (" "*(6-len(str(count))))+":     "+ID+"  :  "+RFID_UID+("  "*(16-len(RFID_UID)))+":"+("  "*3)+name +("  "*(24-len(name)))+":"+("  "*4)+email + ("  "*(30-len(email)))+":"+("  "*4)+ UID + ("  "*(20-len(UID)))+":"+("  "*3)+ PIN + ("  "*(9-len(PIN)))+":"+("  "*4)
                 self.__list_box.insert(END, infor)
         self.__list_box.place(relx=0, rely=0, relheight=1, relwidth=0.98)
         # ----------------------------------------------------------------
@@ -1764,11 +1763,11 @@ class BorrowedEquipments:
     def __borrowDevices(self):
         askUID=messagebox.askyesno("Ask UID","Please insert your card")
         if askUID==1:
-            check =1
-            #check=communicate.sendRequestUID()
+            #check =1
+            check=communicate.sendRequestUID()
             if check ==1:
-                #uid=communicate.getUID()
-                uid="82 BB 44 96"
+                uid=communicate.getUID()
+                #uid="82 BB 44 96"
                 id=data.getIDWithRFID_UID(uid)
                 if id!=0:
                     cursor= self.__list_box.curselection()
@@ -1836,11 +1835,11 @@ class ReturnBorrowedDevicesWindow:
 
     def __insertCardReturn(self):
         # ask UID
-        check = 1
-        #check=communicate.sendRequestUID()
+        #check = 1
+        check=communicate.sendRequestUID()
         if check ==1:
-            #uid=communicate.getUID()
-            uid="82 BB 44 96"
+            uid=communicate.getUID()
+            #uid="82 BB 44 96"
             id= data.getIDWithRFID_UID(uid)
             list = self.__bdl.getInforWithNameAndID(self.__name, id)
             if list!=0:
@@ -2072,7 +2071,7 @@ data = Data()
 database = Data()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-#communicate= SendToArduino("0")
+communicate= SendToArduino("0")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
