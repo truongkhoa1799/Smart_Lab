@@ -33,6 +33,12 @@ labScheduleList = {
     }
 }
 
+i = 31
+while i <= 33:
+    labScheduleList["Classes"]["C5_202"][i] = 31
+    labScheduleList["Classes"]["C6_101"][i] = 31
+    i += 1
+
 
 labStatusList = {
     "C5_202": {
@@ -122,53 +128,75 @@ class MyFirebase:
     def addUser(self, userData, isAdmin = False):
         if self.checkAdmin is False:
             print("Add user failed")
-            return False, None
+            return False, None, None
         try:
             newUser = self.auth.create_user_with_email_and_password(userData['Email'], userData['Password'])
             uid = self.auth.get_account_info(newUser['idToken'])['users'][0]['localId']
             userData['UID'] = uid
             if "Password" in userData:
                 del userData["Password"]
+            strPIN = userData['PIN']
+            del userData["PIN"]
+            self.refDB.child("List PINs").child(userData['UID']).set(strPIN, self.admin['idToken'])
             self.refDB.child("List of users").child(userData['ID number']).set(userData, self.admin['idToken'])
             self.refDB.child("Allowed UIDs").child(userData['UID']).set({"Status": 'true', "ID number": str(userData['ID number'])}, self.admin['idToken'])
             if isAdmin == True:
                 self.refDB.child("Admin Key").child(uid).set("true", self.admin['idToken'])
                 print("Add admin successful")
-                return True, userData
+                return True, userData, strPIN
             print("Add user successful")
-            return True, userData
+            return True, userData, strPIN
         except Exception as e:
             print("Add user failed")
             print(e)
-            return False, None
+            return False, None, None
 
-    def activateUser(self, UID):
+    def activateUser(self, uid):
         if self.checkAdmin is False:
             print("Activate failed")
             return False
-        else:
-            try:
-                self.refDB.child("Allowed UIDs").child(UID).set({"Status": 'true'}, self.admin['idToken'])
-                print("Activate user successful")
-                return True
-            except Exception as e:
-                print("Activate user failed")
-                print(e)
-                return False
+        try:
+            self.refDB.child("Allowed UIDs").child(uid).child("Status").set("true", self.admin['idToken'])
+            print("Activate user successful")
+            return True
+        except Exception as e:
+            print("Activate user failed")
+            print(e)
+            return False
 
-    def deactivateUser(self, UID):
+    def deactivateUser(self, uid):
         if self.checkAdmin is False:
             print("Deactivate failed")
             return False
+        try:
+            self.refDB.child("Allowed UIDs").child(uid).child("Status").set('false', self.admin['idToken'])
+            print("Deactivate user successful")
+            return True
+        except Exception as e:
+            print("Deactivate user failed")
+            print(e)
+            return False
+
+    def checkTypeLogin(self, uid):
+        if self.checkAdmin is False:
+            print("Check failed")
+            return -1
         else:
             try:
-                self.refDB.child("Allowed UIDs").child(UID).set({"Status": 'false'}, self.admin['idToken'])
-                print("Deactivate user successful")
-                return True
+                checkIsAdmin = self.refDB.child("Allowed UIDs").child(uid).get(self.admin['idToken'])
+                print(checkIsAdmin.val())
+                if "Admin" in checkIsAdmin.val()["ID number"]:
+                    print("Check successful")
+                    return 1
+                if checkIsAdmin.val()["Status"] == "true":
+                    print("Check successful")
+                    return 2
+                print("Check successful")
+                return 3
             except Exception as e:
-                print("Deactivate user failed")
+                print("Check failed")
                 print(e)
-                return False
+                return -1
 
     def updateUserList(self, userList):
         if self.checkAdmin is False:
@@ -374,9 +402,41 @@ class MyFirebase:
             print(e)
             return False
 
+    def getListPINs(self):
+        if self.checkAdmin is False:
+            print("Get list PIN failed")
+            return False, None
+        try:
+            listPINs = {}
+            temp_data = self.refDB.child("List PINs").get(self.admin['idToken'])
+            for PIN in temp_data.each():
+                listPINs[PIN.key()] = PIN.val()
+            print("Get list PINs successful")
+            return True, listPINs
+        except Exception as e:
+            print("Get list PINs failed")
+            print(e)
+            return False, None
 
 
-# myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+
+
+myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+data_admin1 = {
+    "Email": "truongkhoa.1799@gmail.com",
+    'Gender': "Male",
+    "ID number": "Admin1",
+    "Name": "Truong Khoa",
+    "Password": "123456",
+    "PIN": "1234",
+    "RFID UID": "C2 56 53 96",
+}
+check, data, mypin = myfirebase.addUser(data_admin1, True)
+print(check)
+print(data)
+print(mypin)
+# check, temp = myfirebase.getSheduleLabList()
+# print(temp["Classes"]["C6_101"])
 # myfirebase.addUser({
 #         "Name": "Ngo Duc Tuan",
 #         "Gender": "Male",
