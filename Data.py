@@ -3,7 +3,7 @@ class Data:
     def __init__(self):
         self.__list={}    # save the main infor
         self.__no_users=0
-        self.__arrayKey=["Name","Gender","ID number","Email","UID","RFID UID", "PIN"]
+        self.__arrayKey=["Name","Gender","ID number","Email","UID","RFID UID"]
         file=open("data.txt", "r")
         #load the infor from file to list
         f1=file.readlines()
@@ -34,8 +34,8 @@ class Data:
 
     def getInforWithID(self, infor):
         if infor in self.__list:
-            return self.__list[infor]
-        else: return 0
+            return 1,self.__list[infor]
+        else: return 0,""
 
     def get(self):
         return self.__list
@@ -54,13 +54,6 @@ class Data:
             return 1
         else: return 0
 
-
-    def changePass(self, SID, pin ):
-        for i in range(self.__no_users):
-            if self.__list[i][0]==SID:
-                self.__list[i][3]=pin
-                break
-        self.__writeIntoFile()
 
 
     def deleteUser(self, infor):
@@ -83,7 +76,7 @@ class Data:
         file = open("data.txt", "w")
         file.write("")
         for i in self.__list:
-            str=self.__list[i].get("Name")+"|"+self.__list[i].get("Gender")+"|"+self.__list[i].get("ID number")+"|"+self.__list[i].get("Email")+"|"+self.__list[i].get("UID")+"|"+self.__list[i].get("RFID UID")+"|"+self.__list[i].get("PIN")+"|"+"\n"
+            str=self.__list[i].get("Name")+"|"+self.__list[i].get("Gender")+"|"+self.__list[i].get("ID number")+"|"+self.__list[i].get("Email")+"|"+self.__list[i].get("UID")+"|"+self.__list[i].get("RFID UID")+"|"+"\n"
             file.write(str)
         file.close()
 
