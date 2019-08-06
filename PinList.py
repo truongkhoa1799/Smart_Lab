@@ -35,6 +35,9 @@ class PinList:
             infor = i +"|"+ self.__list[i]+"|"+"\n"
             file.write(infor)
         file.close()
+    def checkPinwithID(self, id,pin):
+        if self.__list[id]==pin: return 1
+        else: return 0
 
 # pin=PinList()
 # pin.addPin("1752222","1234")

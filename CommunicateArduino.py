@@ -15,10 +15,10 @@ class SendToArduino:
     def sendInfor(self, data):
         # 1|name|pin for get infor
         # 3 for get id
-        self.__transmitData=data
+        transmitData=data
         check=0
         count=0
-        if data[0]=="1":self.__ser.write(self.__transmitData.encode('utf-8'))
+        if data[0]=="1":self.__ser.write(transmitData.encode('utf-8'))
         while check==0 and count<10:
             print("waiting")
             self.__receiveInfor=self.__ser.readline();
@@ -39,12 +39,14 @@ class SendToArduino:
             self.__receiveInfor == "b''"
             return 1
       
-
+    def sendResultForAccess(self, result):
+        transmitData = result
+        self.__ser.write(transmitData.encode('utf-8'))
 
     def sendRequestUID(self):
         #3 is the ask for UID
-        self.__transmitData="3"
-        self.__ser.write(self.__transmitData.encode('utf-8'))
+        transmitData="3"
+        self.__ser.write(transmitData.encode('utf-8'))
         check=0
         count=0
         while check==0 and count<10:
@@ -70,10 +72,12 @@ class SendToArduino:
         self.__UID=self.__receiveInfor[2:-5]
         return self.__UID
     
-    def receiveInfor(self):
+    def receiveInforForAccess(self):
+        #uid|id|pin
         self.__receiveInfor= self.__ser.readline()
         self.__receiveInfor = str(self.__receiveInfor)
-        return self.__receiveInfor[2:-5]
+        if self.__receiveInfor!="b''" and self.__receiveInfor[0]=="4": return self.__receiveInfor[2:-5]
+        else: return 0
     def Print(self):
         print("open")
 

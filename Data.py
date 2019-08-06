@@ -72,6 +72,10 @@ class Data:
                 return 1
         return 0
 
+    def checkExist(self, id ):
+        if id in self.__list: return 1
+        else: return 0
+
     def __writeIntoFile(self):
         file = open("data.txt", "w")
         file.write("")

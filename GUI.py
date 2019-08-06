@@ -322,7 +322,9 @@ class AddUser:
     # get the infor save in database, and send name and id to arduino, simultaneously get the iud and save in database
     def __submitAddUser(self):
         self.__string_name=self.__entry_name.get()
+        self.__string_name=self.__string_name.upper()
         self.__string_SID=self.__entry_SID.get()
+        self.__string_SID=self.__string_SID.upper()
         self.__admin_name= self.__string_SID+str(adminList.returnNoAdmins()+1)
         self.__string_email=self.__entry_email.get()
         self.__string_check_pin=self.__entry_check_pin.get()
@@ -361,8 +363,10 @@ class AddUser:
                 else: check, new_list, pin = database.addUser(list,True)
                 if check==TRUE:
                     data.addUser(new_list)
-                    if self.__admin_check.get()==1: adminList.addAdmin(self.__admin_name)
-                    pinList.addPin(self.__string_SID, pin)
+                    if self.__admin_check.get()==1:
+                        adminList.addAdmin(self.__admin_name)
+                        pinList.addPin(self.__admin_name, pin)
+                    else: pinList.addPin(self.__string_SID, pin)
                     account.addUser(new_list["ID number"])
                     messagebox.showinfo("Add Users", "Add successfully.")
                     self.mainMenu()
@@ -2124,13 +2128,33 @@ SignInScreen.SignInScreen()
 def loopGUI():
     root.mainloop()
 
+def analyzeInforForAccess(string):
+    string=string+"|"
+    count=0
+    array=["","",""]
+    for i in string:
+        if i!="|":
+            array[count]=array[count]+i
+        else: count= count+1
+    return array[1].upper(), array[2]
+
 # def Receive():
 #     while TRUE:
-#         dataForDoor=Data()
-#         rfid_uid=communicate.receiveInfor()
-#         if rfid_uid!="b''" and dataForDoor.checkRFID_UID(rfid_uid)==1:
-#             communicate.Print()
-#         else: print("invalid")
+#         infor=communicate.receiveInforForAccess()
+#         if infor !=0:
+#             id, pin= analyzeInforForAccess(infor)
+#             checkExist=data.checkExist(id)
+#             accountStatus= AccountStatus()
+#             checkStatus=accountStatus.getStatus(id)
+#
+#             if checkExist==1 and checkStatus=="ACTIVE":
+#                 pin=PinList()
+#                 check=pin.checkPinwithID(id,pin)
+#                 if check==1: commnunicate.sendResultForAccess("ACCEPT")
+#                 else: communicate.sendResultForAccess("WRONG PIN")
+#             elif checkExist==1 and checkStatus=="DEACTIVE"
+#                 communicate.sendResultForAccess("DEACTIVE")
+#             elif checkExist==0: communicate.sendResultForAccess("NOTEXIST")
 #     time.sleep(1)
 
 
