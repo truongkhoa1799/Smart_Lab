@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05a56223-0f43-47ce-9a6b-3b432ad604b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/AdminList.txt" beforeDir="false" afterPath="$PROJECT_DIR$/AdminList.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommunicateArduino.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommunicateArduino.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PinList.py" beforeDir="false" afterPath="$PROJECT_DIR$/PinList.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PinList.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PinList.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accountStatus.txt" beforeDir="false" afterPath="$PROJECT_DIR$/accountStatus.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28888">
-              <caret line="2159" lean-forward="true" selection-start-line="2159" selection-end-line="2159" />
+            <state relative-caret-position="394">
+              <caret line="1809" column="13" selection-start-line="1809" selection-start-column="13" selection-end-line="1809" selection-end-column="13" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
                 <element signature="e#73430#75036#0" />
@@ -107,14 +100,14 @@
         <option value="$PROJECT_DIR$/AdminList.py" />
         <option value="$PROJECT_DIR$/PinList.py" />
         <option value="$PROJECT_DIR$/Data.py" />
-        <option value="$PROJECT_DIR$/GUI.py" />
         <option value="$PROJECT_DIR$/CommunicateArduino.py" />
+        <option value="$PROJECT_DIR$/GUI.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="1576" />
+    <option name="y" value="123" />
     <option name="width" value="1382" />
     <option name="height" value="744" />
   </component>
@@ -288,15 +281,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="1358" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1376488" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09747102" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.1898527" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.12567714" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -415,8 +408,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28888">
-          <caret line="2159" lean-forward="true" selection-start-line="2159" selection-end-line="2159" />
+        <state relative-caret-position="394">
+          <caret line="1809" column="13" selection-start-line="1809" selection-start-column="13" selection-end-line="1809" selection-end-column="13" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
             <element signature="e#73430#75036#0" />

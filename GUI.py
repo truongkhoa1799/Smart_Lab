@@ -14,7 +14,7 @@ from Room import Room
 from PinList import PinList
 from AdminList import AdminList
 
-#from CommunicateArduino import SendToArduino
+from CommunicateArduino import SendToArduino
 
 
 LENGTH_OF_PIN =4
@@ -337,12 +337,12 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            #check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_ID)
-            check = 1
+            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_ID)
+            #check = 1
             if check==1:
                 #if check == 1 do else print fail
-                #uid=communicate.getUID()
-                uid="82 BB 44 95"
+                uid=communicate.getUID()
+                #uid="82 BB 44 95"
                 print(uid)
                 #send infor to arduino to get RFID UID
                 list = {}
@@ -1807,11 +1807,11 @@ class BorrowedEquipments:
     def __borrowDevices(self):
         askUID=messagebox.askyesno("Ask UID","Please insert your card")
         if askUID==1:
-            check =1
-            #check=communicate.sendRequestUID()
+            #check =1
+            check=communicate.sendRequestUID()
             if check ==1:
-                #uid=communicate.getUID()
-                uid="82 BB 44 96"
+                uid=communicate.getUID()
+                #uid="82 BB 44 96"
                 id=data.getIDWithRFID_UID(uid)
                 if id!=0:
                     cursor= self.__list_box.curselection()
@@ -1879,11 +1879,11 @@ class ReturnBorrowedDevicesWindow:
 
     def __insertCardReturn(self):
         # ask UID
-        check = 1
-        #check=communicate.sendRequestUID()
+        #check = 1
+        check=communicate.sendRequestUID()
         if check ==1:
-            #uid=communicate.getUID()
-            uid="82 BB 44 96"
+            uid=communicate.getUID()
+            #uid="82 BB 44 96"
             id= data.getIDWithRFID_UID(uid)
             list = self.__bdl.getInforWithNameAndID(self.__name, id)
             if list!=0:
@@ -2117,10 +2117,10 @@ adminList=AdminList()
 account=AccountStatus()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-# try:
-#     communicate= SendToArduino("0")
-# except Exception as e:
-#     communicate = SendToArduino("1")
+try:
+    communicate= SendToArduino("0")
+except Exception as e:
+    communicate = SendToArduino("1")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -2138,29 +2138,29 @@ def analyzeInforForAccess(string):
         else: count= count+1
     return array[1].upper(), array[2]
 
-# def Receive():
-#     while TRUE:
-#         infor=communicate.receiveInforForAccess()
-#         if infor !=0:
-#             id, pin= analyzeInforForAccess(infor)
-#             checkExist=data.checkExist(id)
-#             accountStatus= AccountStatus()
-#             checkStatus=accountStatus.getStatus(id)
-#
-#             if checkExist==1 and checkStatus=="ACTIVE":
-#                 pin=PinList()
-#                 check=pin.checkPinwithID(id,pin)
-#                 if check==1: commnunicate.sendResultForAccess("ACCEPT")
-#                 else: communicate.sendResultForAccess("WRONG PIN")
-#             elif checkExist==1 and checkStatus=="DEACTIVE"
-#                 communicate.sendResultForAccess("DEACTIVE")
-#             elif checkExist==0: communicate.sendResultForAccess("NOTEXIST")
-#     time.sleep(1)
+def Receive():
+    while TRUE:
+        infor=communicate.receiveInforForAccess()
+        if infor !=0:
+            id, pin= analyzeInforForAccess(infor)
+            checkExist=data.checkExist(id)
+            accountStatus= AccountStatus()
+            checkStatus=accountStatus.getStatus(id)
+
+            if checkExist==1 and checkStatus=="ACTIVE":
+                pin=PinList()
+                check=pin.checkPinwithID(id,pin)
+                if check==1: commnunicate.sendResultForAccess("ACCEPT")
+                else: communicate.sendResultForAccess("WRONG PIN")
+            elif checkExist==1 and checkStatus=="DEACTIVE"
+                communicate.sendResultForAccess("DEACTIVE")
+            elif checkExist==0: communicate.sendResultForAccess("NOTEXIST")
+    time.sleep(1)
 
 
 if __name__=="__main__":
-    # p1 = Process(target=Receive)
-    # p1.start()
+    p1 = Process(target=Receive)
+    p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 
