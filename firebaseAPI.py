@@ -421,20 +421,20 @@ class MyFirebase:
 
 
 
-myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
-data_admin1 = {
-    "Email": "truongkhoa.1799@gmail.com",
-    'Gender': "Male",
-    "ID number": "Admin1",
-    "Name": "Truong Khoa",
-    "Password": "123456",
-    "PIN": "1234",
-    "RFID UID": "C2 56 53 96",
-}
-check, data, mypin = myfirebase.addUser(data_admin1, True)
-print(check)
-print(data)
-print(mypin)
+#myfirebase = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+#data_admin1 = {
+ #   "Email": "truongkhoa.1799@gmail.com",
+  #  'Gender': "Male",
+   # "ID number": "Admin1",
+   # "Name": "Truong Khoa",
+   # "Password": "123456",
+   # "PIN": "1234",
+   # "RFID UID": "C2 56 53 96",
+#}
+#check, data, mypin = myfirebase.addUser(data_admin1, True)
+#print(check)
+#print(data)
+#print(mypin)
 # check, temp = myfirebase.getSheduleLabList()
 # print(temp["Classes"]["C6_101"])
 # myfirebase.addUser({

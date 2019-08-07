@@ -2117,10 +2117,10 @@ adminList=AdminList()
 account=AccountStatus()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-try:
-    communicate= SendToArduino("0")
-except Exception as e:
-    communicate = SendToArduino("1")
+#try:
+#    communicate= SendToArduino("0")
+#except Exception as e:
+#    communicate = SendToArduino("1")
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -2152,7 +2152,7 @@ def Receive():
                 check=pin.checkPinwithID(id,pin)
                 if check==1: commnunicate.sendResultForAccess("ACCEPT")
                 else: communicate.sendResultForAccess("WRONG PIN")
-            elif checkExist==1 and checkStatus=="DEACTIVE"
+            elif checkExist==1 and checkStatus=="DEACTIVE":
                 communicate.sendResultForAccess("DEACTIVE")
             elif checkExist==0: communicate.sendResultForAccess("NOTEXIST")
     time.sleep(1)
