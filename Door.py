@@ -19,6 +19,7 @@ def analyzeInforForAccess(string):
 
 def Receive():
     count=0
+    status="C"
     while True:
         #checkInfor=1 co signal
         checkInfor,infor=communicate.receiveInforFromArduino()
@@ -28,8 +29,10 @@ def Receive():
             id=id[0:7]
             pin=pin[0:4]
             uid=data.getUIDWithID(id)
-            print(RFID_UID,uid, id,pin)                                                                                                      
+            print(RFID_UID,uid, id,pin)
+            
             checkPin=pinList.checkPinWithUID(uid,pin)
+            
             accountStatus= AccountStatus()
             checkStatus=accountStatus.getStatus(id)
             if checkPin==1 and checkStatus=="ACTIVE":
@@ -52,8 +55,13 @@ def Receive():
     time.sleep(0.4)
     
 database = MyFirebase("doorsystem@gmail.com", "1234123")
+
+labStatus=database.getLabStatusList()
+
 account=AccountStatus()
 data = Data()
-pinList=PinList()
+
+pinList=PinList(False,"")
+
 if __name__=="__main__":
     Receive()

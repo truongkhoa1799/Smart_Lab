@@ -364,8 +364,9 @@ class AddUser:
                     data.addUser(new_list)
                     if self.__admin_check.get()==1:
                         adminList.addAdmin(self.__admin_name)
-                        pinList.addPin(new_list["UID"], pin)
-                    else: pinList.addPin(new_list["UID"], pin)
+			#khong add pin trong local ma push len database
+                        #pinList.addPin(new_list["UID"], pin)
+                    #else: pinList.addPin(new_list["UID"], pin)
                     account.addUser(new_list["ID number"])
                     messagebox.showinfo("Add Users", "Add successfully.")
                     self.mainMenu()
@@ -2110,15 +2111,17 @@ class CheckBorrowedEquipmentsWin:
 
 
 data = Data()
-database = Data()
-pinList=PinList()
 adminList=AdminList()
 account=AccountStatus()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
+
+checkListPin,listPin= database.getListPINs()
+pinList=PinList(checkListPin,listPin)
+
 root= Tk()
 
 			
-communicate = SendToArduino("ACM1")
+communicate = SendToArduino("ACM2")
 
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()

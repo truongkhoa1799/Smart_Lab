@@ -1,16 +1,21 @@
+from firebaseAPI import MyFirebase
 class PinList:
-    def __init__(self):
-        self.__list={}
-        self.__no_users=0
-        file = open("PinList.txt", "r")
-        f1=file.readlines()
-        for x in f1:
-            x=x.replace("\n","")
-            # ID number | pin
-            id, pin= self.__change(x)
-            self.__list[id]=pin
-            self.__no_users = self.__no_users + 1
-        file.close()
+    def __init__(self,check,listPin):
+        if check==False:
+            self.__list={}
+            self.__no_users=0
+            file = open("PinList.txt", "r")
+            f1=file.readlines()
+            for x in f1:
+                x=x.replace("\n","")
+                # ID number | pin
+                id, pin= self.__change(x)
+                self.__list[id]=pin
+                self.__no_users = self.__no_users + 1
+            file.close()
+        else:
+            self.__list=listPin
+            self.__writeBack()
     def __change(self, x):
         array=["",""]
         count =0
@@ -39,6 +44,7 @@ class PinList:
         file.close()
         
     def checkPinWithUID(self, uid,pin):
+        print(uid,pin)
         if self.__list[uid]==pin: return 1
         else: return 0
 
