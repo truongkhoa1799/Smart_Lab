@@ -75,6 +75,11 @@ class Data:
     def checkExist(self, id ):
         if id in self.__list: return 1
         else: return 0
+    
+    def getUIDWithID(self,id):
+        if self.checkExist(id)==0: return 0
+        else:
+            return self.__list[id]["UID"]
 
     def __writeIntoFile(self):
         file = open("data.txt", "w")

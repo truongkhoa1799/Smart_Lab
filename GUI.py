@@ -364,8 +364,8 @@ class AddUser:
                     data.addUser(new_list)
                     if self.__admin_check.get()==1:
                         adminList.addAdmin(self.__admin_name)
-                        pinList.addPin(self.__admin_name, pin)
-                    else: pinList.addPin(self.__string_SID, pin)
+                        pinList.addPin(new_list["UID"], pin)
+                    else: pinList.addPin(new_list["UID"], pin)
                     account.addUser(new_list["ID number"])
                     messagebox.showinfo("Add Users", "Add successfully.")
                     self.mainMenu()
@@ -2116,10 +2116,10 @@ adminList=AdminList()
 account=AccountStatus()
 database = MyFirebase("smartsystem.hcmut@gmail.com", "ktmtbk2017")
 root= Tk()
-#try:
-#    communicate= SendToArduino("0")
-#except Exception as e:
-#    communicate = SendToArduino("1")
+
+			
+communicate = SendToArduino("ACM1")
+
 SignInScreen = SignIn(root)
 SignInScreen.SignInScreen()
 
@@ -2127,39 +2127,14 @@ SignInScreen.SignInScreen()
 def loopGUI():
     root.mainloop()
 
-def analyzeInforForAccess(string):
-    string=string+"|"
-    count=0
-    array=["","",""]
-    for i in string:
-        if i!="|":
-            array[count]=array[count]+i
-        else: count= count+1
-    return array[1].upper(), array[2]
 
-def Receive():
-    while TRUE:
-        infor=communicate.receiveInforForAccess()
-        if infor !=0:
-            id, pin= analyzeInforForAccess(infor)
-            checkExist=data.checkExist(id)
-            accountStatus= AccountStatus()
-            checkStatus=accountStatus.getStatus(id)
 
-            if checkExist==1 and checkStatus=="ACTIVE":
-                pin=PinList()
-                check=pin.checkPinwithID(id,pin)
-                if check==1: commnunicate.sendResultForAccess("ACCEPT")
-                else: communicate.sendResultForAccess("WRONG PIN")
-            elif checkExist==1 and checkStatus=="DEACTIVE":
-                communicate.sendResultForAccess("DEACTIVE")
-            elif checkExist==0: communicate.sendResultForAccess("NOTEXIST")
-    time.sleep(1)
+
 
 
 if __name__=="__main__":
-    p1 = Process(target=Receive)
-    p1.start()
+    #p1 = Process(target=Receive)
+    #p1.start()
     p2=Process(target=loopGUI)
     p2.start()
 

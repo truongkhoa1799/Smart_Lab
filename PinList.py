@@ -22,12 +22,14 @@ class PinList:
     def get(self):
         print(self.__list)
 
-    def addPin(self, id , pin):
-        self.__list[id]=pin
+    def addPin(self, uid , pin):
+        self.__list[uid]=pin
         self.__no_users=self.__no_users+1
         self.__writeBack()
-    def changePin(self, id, pin):
-        self.addPin(id, pin)
+        
+    def changePin(self, uid, pin):
+        self.addPin(uid, pin)
+        
     def __writeBack(self):
         file = open("PinList.txt", "w")
         file.write("")
@@ -35,8 +37,9 @@ class PinList:
             infor = i +"|"+ self.__list[i]+"|"+"\n"
             file.write(infor)
         file.close()
-    def checkPinwithID(self, id,pin):
-        if self.__list[id]==pin: return 1
+        
+    def checkPinWithUID(self, uid,pin):
+        if self.__list[uid]==pin: return 1
         else: return 0
 
 # pin=PinList()
