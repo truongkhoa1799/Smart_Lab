@@ -324,8 +324,7 @@ class AddUser:
         self.__string_name=self.__entry_name.get()
         self.__string_name=self.__string_name.upper()
         self.__string_SID=self.__entry_SID.get()
-        self.__string_SID=self.__string_SID.upper()
-        self.__admin_name= self.__string_SID+str(adminList.returnNoAdmins()+1)
+        self.__admin_name= "Admin"+str(adminList.returnNoAdmins()+1)
         self.__string_email=self.__entry_email.get()
         self.__string_check_pin=self.__entry_check_pin.get()
         self.__string_pin = self.__entry_pin.get()
@@ -337,7 +336,7 @@ class AddUser:
 
     def __submitAddUserConfrim(self):
         if self.__checkAddUsers()==1:
-            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_ID)
+            check = communicate.sendInfor("1|"+self.__string_name+"|"+self.__string_SID)
             #check = 1
             if check==1:
                 #if check == 1 do else print fail
